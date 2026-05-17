@@ -1,5 +1,5 @@
 <template>
-    <div class="glass">
+    <div class="glass glassBox">
         
         <slot></slot>
     </div>
@@ -9,14 +9,10 @@
 
 </script>
 <style scoped>
-.glass {
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 10px 10px 10px 10px;
+.glassBox {
+
     /* background-color: #d7d7d7; */
-    border: solid 1px #ffffff4f;
     width: fit-content;
     height: fit-content;
-    border-radius: 20px;
 }
 </style>

@@ -6,9 +6,23 @@ import TimeBox from './components/TimeBox.vue';
 </script>
 
 <template>
-  <AppContent>
-    <SearchBox />
+  <AppContent class="column">
+    <SearchBox style="margin-top: 50px;"/>
     <BookMarker/>
     <TimeBox/>
   </AppContent>
 </template>
+
+
+<style scoped>
+.column {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    height: 100vh;
+    overflow: scroll;
+    gap: 20px;
+}
+</style>
