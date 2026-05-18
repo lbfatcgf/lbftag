@@ -7,9 +7,9 @@ import TimeBox from './components/TimeBox.vue';
 
 <template>
   <AppContent class="column">
-    <SearchBox style="margin-top: 50px;"/>
+    <TimeBox style="margin-top: 50px;"/>
+    <SearchBox />
     <BookMarker/>
-    <TimeBox/>
   </AppContent>
 </template>
 

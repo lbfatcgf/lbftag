@@ -1,13 +1,13 @@
 <template>
-    <div>
-        <h2>{{ timeNow }}</h2>
-        <h2>{{ dayNow }}</h2>
-    </div>
+    <n-flex vertical align="center" >
+        <n-gradient-text type="info">{{ timeNow }}</n-gradient-text>
+        <n-gradient-text type="info">{{ dayNow }}</n-gradient-text>
+    </n-flex>
 </template>
 
 <script setup  lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-
+import {NFlex,NGradientText} from 'naive-ui'
 const timeNow = ref<string>('--:--:--');
 const dayNow=ref<string>('----/--/--')
 let timer:number|null = null;
@@ -45,3 +45,9 @@ onUnmounted(() => {
     }
 })
 </script>
+
+<style  scoped>
+.n-gradient-text {
+  font-size: 32px;
+}
+</style>

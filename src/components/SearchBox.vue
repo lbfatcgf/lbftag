@@ -1,22 +1,42 @@
 <template>
-  <div class="searchBox">
-    <select class="engine"  @change="updateEngine">
-      <option v-for="item in engines" :value="item[0]" :selected="item[0]===defaultEngine">{{ item[0] }}</option>
-    </select>
-    <input type="search" v-model="searchContext" @keydown="finish" class="inputBox">
-    <svg class="inputBtn" @click="search" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-      viewBox="0 0 1664 1664" preserveAspectRatio="none">
-      <path fill="currentColor"
-        d="M1152 704q0-185-131.5-316.5T704 256T387.5 387.5T256 704t131.5 316.5T704 1152t316.5-131.5T1152 704m512 832q0 52-38 90t-90 38q-54 0-90-38l-343-342q-179 124-399 124q-143 0-273.5-55.5t-225-150t-150-225T0 704t55.5-273.5t150-225t225-150T704 0t273.5 55.5t225 150t150 225T1408 704q0 220-124 399l343 343q37 37 37 90" />
-    </svg>
+  <div class="glass searchBox">
+    <n-dropdown :options="enginesOptions" @select="updateEngine" >
+      <n-button quaternary size="large" style="width: 80px;">{{ defaultEngine }}</n-button>
+    </n-dropdown>
+    <n-input style="border-radius: 12px;" v-model:value="searchContext" type="text" @keydown="finish" placeholder="">
+      <template #suffix>
+
+        <n-button quaternary @click="search">
+          <n-icon size="24">
+            <Search></Search>
+          </n-icon>
+        </n-button>
+      </template>
+    </n-input>
+    <!-- <select class="engine" @change="updateEngine">
+      <option v-for="item in engines" :value="item[0]" :selected="item[0] === defaultEngine">{{ item[0] }}</option>
+    </select> -->
+
+
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
-
+import { NInput, NIcon, NButton, NDropdown, type DropdownOption } from 'naive-ui'
+import { Search } from '@vicons/fa'
 const searchContext = ref<string>('');
 const defaultEngine = ref<string>('bing');
+const enginesOptions : Array<DropdownOption>= [
+  {
+    label: 'bing',
+    key: 'bing',
+  },
+  {
+    label: 'google',
+    key: 'google',
+  }
+]
 const engines = reactive<Map<string, string>>(new Map<string, string>());
 function finish(event: KeyboardEvent) {
   if (event.key === 'Enter') {
@@ -27,10 +47,9 @@ function finish(event: KeyboardEvent) {
 function search() {
   window.open(engines.get(defaultEngine.value) + searchContext.value, '_blank');
 }
-function updateEngine(event: Event) {
-  const target = event.target as HTMLSelectElement;
-  defaultEngine.value = target.value;
-  localStorage.setItem('defaultEngine', defaultEngine.value);
+function updateEngine(_: string | number, option: DropdownOption) {
+  defaultEngine.value = option.label as string ??'bing';
+  
 }
 onMounted(() => {
   engines.set('bing', 'https://www.bing.com/search?q=');
@@ -44,20 +63,16 @@ onMounted(() => {
       engines.set(key, data[key]);
     }
   }
-  let de=localStorage.getItem('defaultEngine');
-  if(de){
-    defaultEngine.value=de;
+  let de = localStorage.getItem('defaultEngine');
+  if (de) {
+    defaultEngine.value = de;
   }
 });
 </script>
 
 <style scoped>
 .searchBox {
-  padding: 10px;
-  border-radius: 5px;
-  border: 0px solid rgba(0, 0, 0, 0);
-
-  background-color: rgba(255, 255, 255, 1);
+  padding: 6px 6px 6px 6px;
   display: flex;
 
   flex-direction: row;
@@ -84,9 +99,11 @@ onMounted(() => {
 .inputBox:focus {
   outline: none;
 }
-.inputBtn{
+
+.inputBtn {
   color: rgba(0, 0, 0, 0.5);
 }
+
 .inputBtn:hover {
   cursor: pointer;
   color: #000;
@@ -98,11 +115,13 @@ onMounted(() => {
     width: 90%;
     gap: 5px;
   }
-  .engine{
+
+  .engine {
     width: 80px;
     appearance: none;
   }
-  .engine::-ms-expand{
+
+  .engine::-ms-expand {
     display: none;
   }
 }

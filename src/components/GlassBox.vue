@@ -1,12 +1,16 @@
 <template>
-    <div class="glass glassBox">
-        
+    <div :class="`glass ${fitContent ? 'glassBox' : ''}`">
+
         <slot></slot>
     </div>
 </template>
 
 <script setup lang="ts">
-
+const props = withDefaults(defineProps<{
+    fitContent?: boolean
+}>(), {
+    fitContent: true
+})
 </script>
 <style scoped>
 .glassBox {
