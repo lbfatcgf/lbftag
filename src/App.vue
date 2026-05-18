@@ -9,7 +9,8 @@ import TimeBox from './components/TimeBox.vue';
   <AppContent class="column">
     <TimeBox style="margin-top: 50px;"/>
     <SearchBox />
-    <BookMarker/>
+    <BookMarker style="flex: 1;"/>
+    <div></div>
   </AppContent>
 </template>
 
@@ -21,7 +22,7 @@ import TimeBox from './components/TimeBox.vue';
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    height: 100vh;
+    height: 100dvh;
     overflow: scroll;
     gap: 20px;
 }
