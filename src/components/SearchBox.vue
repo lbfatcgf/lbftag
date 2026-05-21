@@ -1,6 +1,6 @@
 <template>
   <div class="glass searchBox">
-    <n-dropdown :options="enginesOptions" @select="updateEngine" >
+    <n-dropdown :options="enginesOptions" @select="updateEngine">
       <n-button quaternary size="large" style="width: 80px;">{{ defaultEngine }}</n-button>
     </n-dropdown>
     <n-input style="border-radius: 12px;" v-model:value="searchContext" type="text" @keydown="finish" placeholder="">
@@ -13,9 +13,7 @@
         </n-button>
       </template>
     </n-input>
-    <!-- <select class="engine" @change="updateEngine">
-      <option v-for="item in engines" :value="item[0]" :selected="item[0] === defaultEngine">{{ item[0] }}</option>
-    </select> -->
+
 
 
   </div>
@@ -27,7 +25,7 @@ import { NInput, NIcon, NButton, NDropdown, type DropdownOption } from 'naive-ui
 import { Search } from '@vicons/fa'
 const searchContext = ref<string>('');
 const defaultEngine = ref<string>('bing');
-const enginesOptions : Array<DropdownOption>= [
+const enginesOptions: Array<DropdownOption> = [
   {
     label: 'bing',
     key: 'bing',
@@ -48,8 +46,8 @@ function search() {
   window.open(engines.get(defaultEngine.value) + searchContext.value, '_blank');
 }
 function updateEngine(_: string | number, option: DropdownOption) {
-  defaultEngine.value = option.label as string ??'bing';
-  
+  defaultEngine.value = option.label as string ?? 'bing';
+
 }
 onMounted(() => {
   engines.set('bing', 'https://www.bing.com/search?q=');
@@ -83,31 +81,7 @@ onMounted(() => {
   gap: 10px;
 }
 
-.engine {
-  font-size: 24px;
-  color: #0441f9;
-  border: 0px solid rgba(0, 0, 0, 0);
-  background-color: rgba(0, 0, 0, 0);
-}
 
-.inputBox {
-  border: 0px solid rgba(0, 0, 0, 0);
-  font-size: 16px;
-  flex: 1;
-}
-
-.inputBox:focus {
-  outline: none;
-}
-
-.inputBtn {
-  color: rgba(0, 0, 0, 0.5);
-}
-
-.inputBtn:hover {
-  cursor: pointer;
-  color: #000;
-}
 
 /* 超小设备 (手机, 600px 以下屏幕设备) */
 @media only screen and (max-width: 600px) {
@@ -116,14 +90,7 @@ onMounted(() => {
     gap: 5px;
   }
 
-  .engine {
-    width: 80px;
-    appearance: none;
-  }
 
-  .engine::-ms-expand {
-    display: none;
-  }
 }
 
 /* 小设备 (平板电脑和大型手机，600 像素及以上) */

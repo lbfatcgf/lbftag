@@ -3,15 +3,20 @@ import AppContent from './components/AppContent.vue'
 import SearchBox from './components/SearchBox.vue';
 import BookMarker from './components/BookMarker.vue';
 import TimeBox from './components/TimeBox.vue';
+import {NDialogProvider} from 'naive-ui'
 </script>
 
 <template>
-  <AppContent class="column">
-    <TimeBox style="margin-top: 50px;"/>
-    <SearchBox />
-    <BookMarker style="flex: 1;"/>
-    <div></div>
-  </AppContent>
+  <n-modal-provider>
+    <n-dialog-provider>
+      <AppContent class="column">
+        <TimeBox style="margin-top: 50px;"/>
+        <SearchBox />
+        <BookMarker style="flex: 1;"/>
+        <div></div>
+      </AppContent>
+    </n-dialog-provider>
+  </n-modal-provider>
 </template>
 
 
