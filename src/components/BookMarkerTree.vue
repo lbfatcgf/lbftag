@@ -1,9 +1,14 @@
 <template>
 	<n-flex v-if="currenBm.children.length > 0" style="width: 100%;">
 
-		<div v-for="(value, index) in currenBm.children" @click="clickDir(value, index)" :key="value.tagName+index">
-			{{ value.tagName }}
-		</div>
+		<BookMarkerItem 
+		style="width: 100%;" 
+		:bm-index="index" :bm="value" 
+		v-for="(value, index) in currenBm.children" 
+		@click-item="clickDir(value, index)" 
+		:key="value.tagName + index">
+			
+		</BookMarkerItem>
 	</n-flex>
 	<div v-else style="width: 100%;">
 		<div style="height: 100px; ">
@@ -14,13 +19,14 @@
 </template>
 <script setup lang="ts">
 import { NFlex } from 'naive-ui';
+import BookMarkerItem from './BookMarkerItem.vue';
 import { onMounted, ref } from 'vue';
 import { jsonToBookMarkerNode, type BookMarkerNode, creareBookMarkerDir, createBookMarkerLink, bookMarkerNodeToJson } from '../models/book_marker';
 
 const emit = defineEmits<{
 	(e: "clickDir", coordinates: Array<number>, tagName: string): void
 }>()
-const coordinates = new Array<number>()
+let coordinates = new Array<number>()
 let bm = ref<BookMarkerNode>({ children: new Array(), tagName: '/', icon: null, href: '' } as BookMarkerNode)
 const currenBm = ref<BookMarkerNode>({ children: new Array(), tagName: '/', icon: null, href: '' } as BookMarkerNode)
 const loadBookMarkerFormCache = () => {
@@ -42,16 +48,35 @@ function inputFile(file: File) {
 		var content = e.target?.result ?? '';
 		// console.log(content);
 		bookMarkParser(content.toString());
-		console.log(bookMarkerNodeToJson(bm.value));
+		// console.log(bookMarkerNodeToJson(bm.value));
 		currenBm.value = bm.value
-	
+		
 
 	}
 
 }
+function changeBMDir(len:number){
+	if(len===0){
+		coordinates=[]
+		currenBm.value=bm.value
+		return
+	}
+	coordinates=coordinates.splice(0,len)
+	currenBm.value=findBm()
+}
 defineExpose({
-	inputFile
+	inputFile,
+	changeBMDir
 })
+
+function findBm() :BookMarkerNode{
+	let bml:BookMarkerNode=bm.value
+	if(coordinates.length===0) return bml
+	for(let i=0;i<coordinates.length;i++){
+		bml = bml.children[coordinates[i]]
+	}
+	return bml
+}
 const bookMarkParser = (content: string) => {
 	if (content.length === 0) {
 		return
@@ -84,7 +109,8 @@ const bookMarkParser = (content: string) => {
 				if (celement.tagName === "DL") {
 
 					let cl = createChildTree(celement);
-					bm.value.children[bm.value.children.length-1].children.push(cl)
+					bm.value.children[bm.value.children.length - 1].children.push(...cl)
+
 				}
 			}
 
@@ -94,25 +120,26 @@ const bookMarkParser = (content: string) => {
 
 
 }
-function createChildTree(dom: ChildNode): BookMarkerNode {
-	let l = dom.childNodes;
-	let treel: BookMarkerNode = {} as BookMarkerNode;
-	treel.children = []
-	for (let i = 0; i < l.length; i++) {
+function createChildTree(dom: Element): BookMarkerNode[] {
+	// debugger
+	let l = dom.children;
+	let treel: BookMarkerNode[] = new Array<BookMarkerNode>;
+
+	for (let i = 0; i < dom.childElementCount; i++) {
 		let celement = l[i] as Element;
-		if (celement.children.length === 1) {
-			treel.children.push(newLink(celement.childNodes[0] as Element));
-		} else {
-			let dir: BookMarkerNode = {} as BookMarkerNode
-			for (let j = 0; j < celement.children.length; j++) {
-				if (celement.children[j].tagName === "H3") {
-					dir = newDir(celement.children[j]);
-				}
-				if (celement.children[j].tagName === "DL") {
-					dir.children.push(createChildTree(celement.children[j]));
-					treel.children.push(dir);
-				}
+		if (celement.childElementCount === 1) {
+			treel.push(newLink(celement.children[0]));
+		} else if (celement.childElementCount === 3) {
+			let dir: BookMarkerNode = newDir(celement.children[0]);
+			let dt = createChildTree(celement.children[1])
+			if (dt instanceof Array) {
+
+				dir.children.push(...dt);
+			} else {
+
 			}
+
+			treel.push(dir);
 		}
 	}
 	return treel;
@@ -129,7 +156,6 @@ function newLink(e: Element): BookMarkerNode {
 }
 
 function clickDir(node: BookMarkerNode, index: number) {
-
 	coordinates.push(index)
 	currenBm.value = jsonToBookMarkerNode(bookMarkerNodeToJson(node))
 	emit('clickDir', coordinates, node.tagName)

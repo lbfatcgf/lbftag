@@ -5,7 +5,7 @@
             <n-flex style="width: 100%;" align="center" justify="space-between">
                 <n-scrollbar style="flex: 1;" :x-scrollable="true">
                     <n-breadcrumb>
-                        <n-breadcrumb-item v-for="value in cuurentBMDir">
+                        <n-breadcrumb-item v-for="(value,index) in cuurentBMDir" :clickable="cuurentBMDir.length-1>index" @click="changeDir(index)">
                             {{ value === '/' ? '..' : value }}
                         </n-breadcrumb-item>
                     </n-breadcrumb>
@@ -68,6 +68,7 @@ function handleInputHtml(event: Event) {
         return
     }
     mbTree.value?.inputFile(file)
+    openDialog.value = false
 }
 function handleSelect(key: string) {
 
@@ -82,10 +83,15 @@ function handleSelect(key: string) {
 }
 const cuurentBMDir = ref<Array<string>>(["/"])
 function handleChangeDir(coordinates: number[], tagName: string,) {
-    if(coordinates.length<cuurentBMDir.value.length){
-        cuurentBMDir.value=cuurentBMDir.value.slice(0,coordinates.length-1)
+    if (coordinates.length < cuurentBMDir.value.length) {
+        cuurentBMDir.value = cuurentBMDir.value.slice(0, coordinates.length - 1)
     }
     cuurentBMDir.value.push(tagName)
+}
+function changeDir(index:number){
+    console.log(index);
+    cuurentBMDir.value=cuurentBMDir.value.slice(0,index+1)
+    mbTree.value?.changeBMDir(index)
 }
 </script>
 
