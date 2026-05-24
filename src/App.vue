@@ -12,7 +12,7 @@ import {NDialogProvider} from 'naive-ui'
       <AppContent class="column">
         <TimeBox style="margin-top: 50px;"/>
         <SearchBox />
-        <BookMarker style="flex: 1;"/>
+        <BookMarker />
         <div></div>
       </AppContent>
     </n-dialog-provider>

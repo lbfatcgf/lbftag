@@ -5,7 +5,7 @@ export type BookMarkerNode = {
     type: 'link' | 'dir';
     href: string | null | undefined;
     icon: string | null | undefined;
-    children: BookMarkerNode[] | null | undefined;
+    children: Array<BookMarkerNode> | BookMarkerNode[];
 
 }
 
@@ -25,7 +25,7 @@ export function createBookMarkerLink(tagName: string, href: string | null | unde
         icon: icon,
         type: 'link',
         href: href,
-        children: null,
+        children: [],
     } as BookMarkerNode;
 }
 
