@@ -1,7 +1,7 @@
 <template>
   <div class="glass searchBox">
-    <n-dropdown :options="enginesOptions" @select="updateEngine">
-      <n-button quaternary size="large" style="width: 80px;">{{ defaultEngine }}</n-button>
+    <n-dropdown :options="SearchEnginsStore.enginesOptions()" @select="updateEngine">
+      <n-button quaternary size="large" style="width: 80px;">{{ SearchEnginsStore.currentEngine }}</n-button>
     </n-dropdown>
     <n-input style="border-radius: 12px;" v-model:value="searchContext" type="text" @keydown="finish" placeholder="">
       <template #suffix>
@@ -20,22 +20,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { NInput, NIcon, NButton, NDropdown, type DropdownOption } from 'naive-ui'
 import { Search } from '@vicons/fa'
+import { SearchEnginsStore } from '../store/search_engins_stroe';
 const searchContext = ref<string>('');
-const defaultEngine = ref<string>('bing');
-const enginesOptions: Array<DropdownOption> = [
-  {
-    label: 'bing',
-    key: 'bing',
-  },
-  {
-    label: 'google',
-    key: 'google',
-  }
-]
-const engines = reactive<Map<string, string>>(new Map<string, string>());
+
+const enginesOptions = ref<Array<DropdownOption>>(new Array())
+
 function finish(event: KeyboardEvent) {
   if (event.key === 'Enter') {
     event.preventDefault();
@@ -43,28 +35,16 @@ function finish(event: KeyboardEvent) {
   }
 }
 function search() {
-  window.open(engines.get(defaultEngine.value) + searchContext.value, '_blank');
+  window.open(SearchEnginsStore.getEnginesLink(SearchEnginsStore.currentEngine) + searchContext.value, '_blank');
 }
 function updateEngine(_: string | number, option: DropdownOption) {
-  defaultEngine.value = option.label as string ?? 'bing';
-
+  SearchEnginsStore.changeCurrentEngines(option.label as string ?? "bing")
 }
 onMounted(() => {
-  engines.set('bing', 'https://www.bing.com/search?q=');
-
-  engines.set('google', 'https://www.google.com/search?q=');
-
-  let storage = localStorage.getItem('engines');
-  if (storage) {
-    let data = JSON.parse(storage);
-    for (let key in data) {
-      engines.set(key, data[key]);
-    }
-  }
-  let de = localStorage.getItem('defaultEngine');
-  if (de) {
-    defaultEngine.value = de;
-  }
+  SearchEnginsStore.loadEngines()
+  enginesOptions.value = SearchEnginsStore.enginesOptions()
+  // console.log(SearchEnginsStore.enginesOptions());
+  
 });
 </script>
 

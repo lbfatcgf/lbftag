@@ -5,8 +5,10 @@
             <n-flex style="width: 100%;" align="center" justify="space-between">
                 <n-scrollbar style="flex: 1;" :x-scrollable="true">
                     <n-breadcrumb>
-                        <n-breadcrumb-item v-for="(value,index) in cuurentBMDir" :clickable="cuurentBMDir.length-1>index" @click="changeDir(index)">
-                            {{ value === '/' ? '..' : value }}
+                        <n-breadcrumb-item v-for="(value, index) in BookMarkerStore.markerPath"
+                            :clickable="BookMarkerStore.markerPath.length - 1 > index"
+                            @click="BookMarkerStore.backMarkerPath(index)">
+                            {{ value.tagName === '/' ? '..' : value.tagName }}
                         </n-breadcrumb-item>
                     </n-breadcrumb>
                 </n-scrollbar>
@@ -19,7 +21,7 @@
                 </n-dropdown>
             </n-flex>
             <n-divider style="padding:  0 12px 0 12px;margin: 0 0 0 0; color: #ffffff79;"></n-divider>
-            <BookMarkerTree ref="mbTree" @click-dir="handleChangeDir" />
+            <BookMarkerTree ref="mbTree" />
         </n-flex>
 
 
@@ -29,7 +31,8 @@
                     <input ref="inputHtml" type="file" accept=".html" style="display:none;" @change="handleInputHtml">
                     <n-button type="info" @click="inputHtml?.click()">从html导入</n-button>
 
-                    <input ref="inputLbftagJson" type="file" accept=".lbftag.json" style="display:none;">
+                    <input ref="inputLbftagJson" type="file" accept=".lbftag.json" style="display:none;"
+                        @change="handleInputJson">
                     <n-button type="info" @click="inputLbftagJson?.click()">从lbftag.json导入</n-button>
                     <n-button @click="openDialog = false" type="error">关闭</n-button>
                 </n-flex>
@@ -47,7 +50,7 @@ import {
 import { EllipsisV } from '@vicons/fa'
 import { ref } from 'vue';
 import BookMarkerTree from './BookMarkerTree.vue'
-const mbTree = ref<InstanceType<typeof BookMarkerTree>>()
+import { BookMarkerStore } from '../store/book_marker_stroe';
 const inputHtml = ref<HTMLInputElement>()
 const inputLbftagJson = ref<HTMLInputElement>()
 const openDialog = ref(false)
@@ -67,7 +70,18 @@ function handleInputHtml(event: Event) {
     if (!file) {
         return
     }
-    mbTree.value?.inputFile(file)
+    // mbTree.value?.inputFile(file)
+    BookMarkerStore.importFormHtml(file)
+    openDialog.value = false
+}
+function handleInputJson(event: Event) {
+    const target = event.target as HTMLInputElement
+    var file = target.files?.[0];
+    if (!file) {
+        return
+    }
+    // mbTree.value?.inputFile(file)
+    BookMarkerStore.importFormJson(file)
     openDialog.value = false
 }
 function handleSelect(key: string) {
@@ -81,18 +95,18 @@ function handleSelect(key: string) {
 
     }
 }
-const cuurentBMDir = ref<Array<string>>(["/"])
-function handleChangeDir(coordinates: number[], tagName: string,) {
-    if (coordinates.length < cuurentBMDir.value.length) {
-        cuurentBMDir.value = cuurentBMDir.value.slice(0, coordinates.length - 1)
-    }
-    cuurentBMDir.value.push(tagName)
-}
-function changeDir(index:number){
-    console.log(index);
-    cuurentBMDir.value=cuurentBMDir.value.slice(0,index+1)
-    mbTree.value?.changeBMDir(index)
-}
+// const cuurentBMDir = ref<Array<string>>(["/"])
+// function handleChangeDir(coordinates: number[], tagName: string,) {
+//     if (coordinates.length < cuurentBMDir.value.length) {
+//         cuurentBMDir.value = cuurentBMDir.value.slice(0, coordinates.length - 1)
+//     }
+//     cuurentBMDir.value.push(tagName)
+// }
+// function changeDir(index:number){
+//     console.log(index);
+//     cuurentBMDir.value=cuurentBMDir.value.slice(0,index+1)
+//     mbTree.value?.changeBMDir(index)
+// }
 </script>
 
 <style scoped>
