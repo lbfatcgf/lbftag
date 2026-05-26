@@ -2,7 +2,7 @@
 	<n-flex v-if="BookMarkerStore.currentMarker.children.length > 0" style="width: 100%;">
 
 		<BookMarkerItem 
-		style="width: 100%;" 
+		
 		:bm-index="index" :bm="value" 
 		v-for="(value, index) in BookMarkerStore.currentMarker.children" 
 		:key="value.tagName + index">

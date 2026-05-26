@@ -50,7 +50,7 @@ onMounted(() => {
 
 <style scoped>
 .searchBox {
-  padding: 6px 6px 6px 6px;
+  /* padding: 6px 6px 6px 6px; */
   display: flex;
 
   flex-direction: row;

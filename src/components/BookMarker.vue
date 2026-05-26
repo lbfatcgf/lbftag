@@ -5,7 +5,7 @@
             <n-flex style="width: 100%;" align="center" justify="space-between">
                 <n-scrollbar style="flex: 1;" :x-scrollable="true">
                     <n-breadcrumb>
-                        <n-breadcrumb-item v-for="(value, index) in BookMarkerStore.markerPath"
+                        <n-breadcrumb-item style="font-size: 18px;" v-for="(value, index) in BookMarkerStore.markerPath"
                             :clickable="BookMarkerStore.markerPath.length - 1 > index"
                             @click="BookMarkerStore.backMarkerPath(index)">
                             {{ value.tagName === '/' ? '..' : value.tagName }}
@@ -62,6 +62,10 @@ const setOption: DropdownOption[] = [
     {
         label: "导出",
         key: "export",
+    },
+    {
+        label: "清空",
+        key: "clear"
     }
 ]
 function handleInputHtml(event: Event) {
@@ -92,7 +96,10 @@ function handleSelect(key: string) {
 
     }
     if (key === "export") {
-
+     BookMarkerStore.exportFile()   
+    }
+    if(key==='clear'){
+        BookMarkerStore.clearAll()
     }
 }
 // const cuurentBMDir = ref<Array<string>>(["/"])
@@ -111,7 +118,7 @@ function handleSelect(key: string) {
 
 <style scoped>
 .talet {
-    width: 80%;
-
+    width: 90%;
 }
+
 </style>

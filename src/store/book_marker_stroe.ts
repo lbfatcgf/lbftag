@@ -6,7 +6,8 @@ import type { BookMarkerPath } from "../models/book_marker_path";
 export const BookMarkerStore = reactive<{
     bookMarker: BookMarkerNode,
     currentMarker: BookMarkerNode,
-    markerPath: BookMarkerPath[]
+    markerPath: BookMarkerPath[],
+    editMarkerIndex: number | null,
     loadMarker: () => void,
     saveMarker: () => void,
     clickMarker: (node: BookMarkerNode, index: number) => void,
@@ -16,11 +17,14 @@ export const BookMarkerStore = reactive<{
     _bookMarkerParser: (content: string) => void,
     _newDir: (e: Element) => BookMarkerNode,
     _newLink: (e: Element) => BookMarkerNode,
-    _createChildTree: (dom: Element) => BookMarkerNode[]
+    _createChildTree: (dom: Element) => BookMarkerNode[],
+    clearAll: () => void,
+    exportFile: () => void
 }>({
     bookMarker: { children: new Array(), tagName: '/', icon: null, href: '', type: 'dir' },
     currentMarker: { children: new Array(), tagName: '/', icon: null, href: '', type: 'dir' },
-    markerPath: [{index:0,tagName:"/"}],
+    markerPath: [{ index: 0, tagName: "/" }],
+    editMarkerIndex: null,
     loadMarker() {
         let cache = localStorage.getItem('bookMarker');
         if (cache) {
@@ -35,10 +39,11 @@ export const BookMarkerStore = reactive<{
     clickMarker(node: BookMarkerNode, index: number) {
         this.markerPath.push({ index: index, tagName: node.tagName })
         this.currentMarker = node
+        this.currentMarker.children.sort(sortBookMarker)
     },
     backMarkerPath(latest: number) {
         if (latest === 0) {
-            this.markerPath = this.markerPath.slice(0,1)
+            this.markerPath = this.markerPath.slice(0, 1)
             this.currentMarker = this.bookMarker
             return
         }
@@ -52,6 +57,7 @@ export const BookMarkerStore = reactive<{
             bml = bml.children[this.markerPath[i].index]
         }
         this.currentMarker = bml
+        this.currentMarker.children.sort(sortBookMarker)
     },
     importFormHtml(file: File) {
         var reader = new FileReader();
@@ -156,5 +162,26 @@ export const BookMarkerStore = reactive<{
         }
         return treel;
     },
+    clearAll() {
+        this.bookMarker = { children: new Array(), tagName: '/', icon: null, href: '', type: 'dir' }
+        this.currentMarker = { children: new Array(), tagName: '/', icon: null, href: '', type: 'dir' }
+        this.markerPath = [{ index: 0, tagName: "/" }]
+        localStorage.removeItem('bookMarker')
+    },
+    exportFile() {
+        const data = bookMarkerNodeToJson(this.bookMarker)
+        const blob = new Blob([data], { type: 'application/json' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url;
+        a.download = 'bookmarks.lbftag.json';
+        a.click()
+
+    },
 })
 
+function sortBookMarker(a: BookMarkerNode, b: BookMarkerNode): number {
+    let al = a.type === 'dir' ? 1 : 0
+    let bl = b.type === 'dir' ? 1 : 0
+    return bl - al
+}
