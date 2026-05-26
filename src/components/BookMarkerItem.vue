@@ -135,7 +135,7 @@ function isEmpty(params: string | null | undefined): boolean {
     font-size: 20px;
     display: -webkit-box;
     /* 必须设置为弹性盒子模型 */
-    -webkit-line-clamp: 2;
+    line-clamp: 2;
     /* 限制最多显示 2 行 */
     -webkit-box-orient: vertical;
     /* 设置盒子方向为垂直 */
