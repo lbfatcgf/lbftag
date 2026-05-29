@@ -3,20 +3,28 @@ import AppContent from './components/AppContent.vue'
 import SearchBox from './components/SearchBox.vue';
 import BookMarker from './components/BookMarker.vue';
 import TimeBox from './components/TimeBox.vue';
-import { NDialogProvider,NConfigProvider,zhCN, dateZhCN } from 'naive-ui'
+import {
+  NDialogProvider, NConfigProvider, zhCN, dateZhCN,
+  NNotificationProvider,
+  NFlex
+} from 'naive-ui'
 
 </script>
 
 <template>
   <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
-    <n-dialog-provider>
-      <AppContent class="column">
-        <TimeBox style="margin-top: 50px;" />
-        <SearchBox />
-        <BookMarker />
-        <div/>
-      </AppContent>
-    </n-dialog-provider>
+    <n-notification-provider>
+      <n-dialog-provider>
+        <AppContent class="column">
+          <n-flex style="width: 100%;" justify="end">
+            <TimeBox style="margin-right: 20px;margin-top: 20px;" />
+          </n-flex>
+          <SearchBox />
+          <BookMarker />
+          <div />
+        </AppContent>
+      </n-dialog-provider>
+    </n-notification-provider>
   </n-config-provider>
 </template>
 

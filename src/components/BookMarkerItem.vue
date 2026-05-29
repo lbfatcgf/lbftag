@@ -1,5 +1,5 @@
 <template>
-    <div ref="markerRef" class="marke_item glassmorphism" @click="handleClick">
+    <div ref="markerRef" class="marke_item no_glass_box" @click="handleClick">
         <n-flex justify="start" align="center" :wrap="false">
             <div class="icon_box" v-if="bm.type === 'dir'">
                 <img v-if="canShowIcon && !isEmpty(bm.icon)" width="32" height="32" class="tag_icon" :src="realIcon()"
@@ -145,29 +145,29 @@ function isEmpty(params: string | null | undefined): boolean {
     /* 可选，但 line-clamp 通常自带省略号 */
 }
 
-.glassmorphism {
+/* .glassmorphism { */
     /* 基础背景 */
-    background: rgba(255, 255, 255, 0.25);
+    /* background: rgba(255, 255, 255, 0.25); */
 
     /* 背景模糊和滤镜 */
-    backdrop-filter: blur(10px) saturate(180%) contrast(100%) brightness(100%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%) contrast(100%) brightness(100%);
+    /* backdrop-filter: blur(10px) saturate(180%) contrast(100%) brightness(100%); */
+    /* -webkit-backdrop-filter: blur(10px) saturate(180%) contrast(100%) brightness(100%); */
 
     /* 边框 */
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 16px;
+    /* border: 1px solid rgba(255, 255, 255, 0.18); */
+    /* border-radius: 16px; */
 
     /* 阴影 */
-    box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.37);
+    /* box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.37); */
 
     /* 文字颜色 */
-    color: #333333;
+    /* color: #333333; */
 
     /* 基础属性 */
-    position: relative;
+    /* position: relative;
     overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); */
+/* } */
 
 .glassmorphism:hover {
     transform: scale(1.02);

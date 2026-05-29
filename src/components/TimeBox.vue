@@ -1,13 +1,16 @@
 <template>
-    <n-flex vertical align="center" >
-        <div class="date_font">{{ timeNow }}</div>
-        <div class="date_font">{{ dayNow }}</div>
-    </n-flex>
+    <GlassBox>
+        <n-flex vertical align="center" >
+            <div class="date_font">{{ timeNow }}</div>
+            <div class="date_font">{{ dayNow }}</div>
+        </n-flex>
+    </GlassBox>
 </template>
 
 <script setup  lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import {NFlex} from 'naive-ui'
+import GlassBox from './GlassBox.vue';
 const timeNow = ref<string>('00:00:00');
 const dayNow=ref<string>('----/--/--')
 let timer:number|null = null;
@@ -48,25 +51,14 @@ onUnmounted(() => {
 
 <style  scoped>
 .date_font {
-  font-size: 32px;
+  font-size: 18px;
   font-weight: bold;
-  background: linear-gradient(120deg,
-    red, orange, yellow, green, cyan, blue, purple, red);
+  background: #000000b0;
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: rainbowMove 2s linear infinite;
-  
-  /* 模糊发光效果：三个不同半径的白色阴影叠加 */
-  text-shadow:
-    0 0 10px rgba(255, 255, 255, 0.6),
-    0 0 20px rgba(255, 255, 255, 0.4),
-    0 0 40px rgba(255, 255, 255, 0.2);
 }
 
-@keyframes rainbowMove {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
-}
+
 </style>

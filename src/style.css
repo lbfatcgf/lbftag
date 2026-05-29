@@ -18,3 +18,8 @@ body {
   );
   padding: 12px 12px 12px 12px;
 }
+
+.no_glass_box{
+  background-color: white;
+  border-radius: 12px;
+}

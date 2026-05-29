@@ -8,17 +8,21 @@
 		:key="value.tagName + index">
 			
 		</BookMarkerItem>
+		<AddMarker/>
+		
 	</n-flex>
-	<div v-else style="width: 100%;">
-		<div style="height: 100px; ">
+	<n-flex v-else style="width: 100%;" justify="center" align="center">
+		<div >
 			<div style="margin: auto;width: fit-content;color: rgba(255, 255, 255, 0.8);">空的</div>
-
+		
 		</div>
-	</div>
+		<AddMarker/>
+	</n-flex>
 </template>
 <script setup lang="ts">
 import { NFlex } from 'naive-ui';
 import BookMarkerItem from './BookMarkerItem.vue';
+import AddMarker from './AddMarker.vue';
 import { onMounted } from 'vue';
 import { BookMarkerStore } from '../store/book_marker_stroe';
 const emit = defineEmits<{

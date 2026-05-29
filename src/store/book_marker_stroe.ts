@@ -1,6 +1,8 @@
 import { reactive } from "vue";
 import { bookMarkerNodeToJson, creareBookMarkerDir, createBookMarkerLink, jsonToBookMarkerNode, type BookMarkerNode } from "../models/book_marker";
 import type { BookMarkerPath } from "../models/book_marker_path";
+import type { BookMarkerFrom } from "../models/book_marker_from";
+import type { BookMarkerAdd } from "../models/book_marker_add";
 
 
 export const BookMarkerStore = reactive<{
@@ -10,6 +12,9 @@ export const BookMarkerStore = reactive<{
     editMarkerIndex: number | null,
     loadMarker: () => void,
     saveMarker: () => void,
+    removeMarker: () => void,
+    updateMarker: (mf: BookMarkerFrom) => void,
+    addMarker: (add: BookMarkerAdd) => void,
     clickMarker: (node: BookMarkerNode, index: number) => void,
     backMarkerPath: (latest: number) => void,
     importFormHtml: (file: File) => void,
@@ -35,6 +40,33 @@ export const BookMarkerStore = reactive<{
     },
     saveMarker() {
         localStorage.setItem('bookMarker', bookMarkerNodeToJson(this.bookMarker))
+    },
+    removeMarker() {
+        if (this.editMarkerIndex !== null) {
+
+            this.currentMarker.children.splice(this.editMarkerIndex!, 1)
+            this.saveMarker()
+        }
+    },
+    updateMarker(mf: BookMarkerFrom) {
+        if (this.editMarkerIndex === null) return
+
+        this.currentMarker.children[this.editMarkerIndex!].tagName = mf.tagName
+        this.currentMarker.children[this.editMarkerIndex!].icon = mf.iconHref
+        this.currentMarker.children[this.editMarkerIndex!].href = mf.href
+        this.saveMarker()
+
+    },
+    addMarker(add: BookMarkerAdd) {
+        const newNode: BookMarkerNode = {
+            tagName: add.tagName,
+            type: add.type,
+            href: add.href,
+            icon: add.iconHref,
+            children: []
+        }
+        this.currentMarker.children.push(newNode)
+        this.saveMarker()
     },
     clickMarker(node: BookMarkerNode, index: number) {
         this.markerPath.push({ index: index, tagName: node.tagName })

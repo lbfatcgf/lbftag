@@ -37,7 +37,7 @@ export const SearchEnginsStore = reactive<{
     enginesOptions(): Array<DropdownOption> {
         let arr: Array<DropdownOption> = [];
 
-        this.engines.forEach((value, key, map) => {
+        this.engines.forEach((_value, key, _map) => {
             arr.push({
                 key: key,
                 label: key,
