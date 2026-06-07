@@ -2,7 +2,10 @@ module github.com/lbfatcgf/lbftag
 
 go 1.25.0
 
-require github.com/gen2brain/beeep v0.11.2
+require (
+	github.com/gen2brain/beeep v0.11.2
+	github.com/pelletier/go-toml/v2 v2.3.1
+)
 
 require (
 	git.sr.ht/~jackmordaunt/go-toast v1.1.2 // indirect
