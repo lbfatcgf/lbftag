@@ -1,0 +1,9 @@
+{
+    "go.testEnvFile": "-v",
+    "go.testEnvVars": {
+
+    },
+    "go.testFlags": [
+        "-v"
+    ]
+}

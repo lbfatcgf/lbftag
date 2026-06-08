@@ -24,4 +24,10 @@ info:
 # 构建
 
 build:
-	$(BUILD_CMD)
+	$(BUILD_CMD) -server -web
+
+build-server:
+	$(BUILD_CMD) -server
+
+build-web:
+	$(BUILD_CMD) -web

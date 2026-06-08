@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 
 	"github.com/pelletier/go-toml/v2"
 )
@@ -33,12 +32,6 @@ func ReadConfig() {
 	if err != nil {
 		if os.IsNotExist(err) {
 			conf = defaultConfig()
-			// 先确保目录存在
-			dir := filepath.Dir(confDir + "/lbftag/conf.toml") // 获取父目录
-			if err := os.MkdirAll(dir, 0755); err != nil {
-				// 创建目录失败，处理错误
-				panic(err) // 或返回 err
-			}
 
 			// 再创建文件
 			cf, err = os.Create(confDir + "/lbftag/conf.toml")
@@ -75,7 +68,7 @@ func ReadConfig() {
 		panic(err)
 	}
 	conf = &config
-	fmt.Println(conf)
+	// fmt.Println(conf)
 }
 func defaultConfig() *Config {
 	return &Config{
