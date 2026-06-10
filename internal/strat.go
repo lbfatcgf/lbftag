@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/lbfatcgf/lbftag/internal/dbsource"
 	"github.com/lbfatcgf/lbftag/internal/models"
 	"github.com/lbfatcgf/lbftag/internal/server"
 )
@@ -11,6 +12,7 @@ import (
 func Start() {
 	createConfigDir()
 	createDbFile()
+	dbsource.InitDB()
 	models.ReadConfig()
 	server.StratHttp()
 	StartTuoPan()

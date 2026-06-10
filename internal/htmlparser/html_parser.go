@@ -1,39 +1,24 @@
 package htmlparser
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"net/url"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/lbfatcgf/lbftag/internal/models"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
-const (
-	MARK_DIR  = "dir"
-	MARK_LINK = "link"
-)
-
-type MarkNode struct {
-	TagName     string
-	Type        string
-	Icon        string
-	Url         string
-	Code        string
-	Parent      string
-	HasChildren bool
-	Deep        int
-}
-
-func NewMarkNodeDir(tagName, icon, url, parent string, deep int) (*MarkNode, error) {
+func NewMarkNodeDir(tagName, icon, url, parent string, deep int) (*models.MarkNode, error) {
 	id, err := gonanoid.New()
 	if err != nil {
 		return nil, err
 	}
-	return &MarkNode{
+	return &models.MarkNode{
 		TagName:     tagName,
-		Type:        MARK_DIR,
+		Type:        models.MARK_DIR,
 		Icon:        icon,
 		Url:         url,
 		Code:        id,
@@ -42,14 +27,14 @@ func NewMarkNodeDir(tagName, icon, url, parent string, deep int) (*MarkNode, err
 		Deep:        deep,
 	}, nil
 }
-func NewMarkNodeLink(tagName, icon, url, parent string, deep int) (*MarkNode, error) {
+func NewMarkNodeLink(tagName, icon, url, parent string, deep int) (*models.MarkNode, error) {
 	id, err := gonanoid.New()
 	if err != nil {
 		return nil, err
 	}
-	return &MarkNode{
+	return &models.MarkNode{
 		TagName:     tagName,
-		Type:        MARK_LINK,
+		Type:        models.MARK_LINK,
 		Icon:        icon,
 		Url:         url,
 		Code:        id,
@@ -61,9 +46,9 @@ func NewMarkNodeLink(tagName, icon, url, parent string, deep int) (*MarkNode, er
 
 // var alls = make([]*MarkNode, 0)
 
-func HtmlParser(data []byte) ([]*MarkNode, error) {
+func HtmlParser(reader io.Reader) ([]models.MarkNode, error) {
 	// fmt.Println(string(data))
-	reader := bytes.NewReader(data)
+	// reader := bytes.NewReader(data)
 	doc, err := goquery.NewDocumentFromReader(reader)
 	if err != nil {
 		fmt.Printf("err:%v\n", err.Error())
@@ -77,7 +62,7 @@ func HtmlParser(data []byte) ([]*MarkNode, error) {
 	return parserDL(rDl, "", 0), nil
 }
 
-func markFromATag(atag *goquery.Selection, parent string, parentDeep int) (*MarkNode, bool) {
+func markFromATag(atag *goquery.Selection, parent string, parentDeep int) (*models.MarkNode, bool) {
 
 	// fmt.Println(atag.Text())
 	title := atag.Text()
@@ -105,7 +90,7 @@ func markFromATag(atag *goquery.Selection, parent string, parentDeep int) (*Mark
 	return nLink, false
 }
 
-func parserDL(dl *goquery.Selection, parent string, parentDeep int) (markNodes []*MarkNode) {
+func parserDL(dl *goquery.Selection, parent string, parentDeep int) (markNodes []models.MarkNode) {
 	if dl == nil {
 		return
 	}
@@ -118,7 +103,7 @@ func parserDL(dl *goquery.Selection, parent string, parentDeep int) (markNodes [
 				fmt.Printf("Error: %v\n", err)
 				return
 			}
-			markNodes = append(markNodes, nDir)
+			markNodes = append(markNodes, *nDir)
 			//TODO 递归获取节点
 			list := parserDL(s.ChildrenFiltered("DL").First(), nDir.Code, nDir.Deep)
 			if len(list) > 0 {
@@ -130,7 +115,7 @@ func parserDL(dl *goquery.Selection, parent string, parentDeep int) (markNodes [
 			if shouldReturn {
 				return
 			}
-			markNodes = append(markNodes, nLink)
+			markNodes = append(markNodes, *nLink)
 		}
 	})
 	return

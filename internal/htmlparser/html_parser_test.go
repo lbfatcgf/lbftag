@@ -4,11 +4,19 @@ import (
 	"os"
 	"testing"
 
+	"github.com/lbfatcgf/lbftag/internal/dbsource"
+	"github.com/lbfatcgf/lbftag/internal/dbsource/curd"
 	"github.com/lbfatcgf/lbftag/internal/htmlparser"
 )
 
 func TestHtmlParser(t *testing.T) {
-	data, _ := os.ReadFile("/home/lbf/文档/bookmarks.html")
+	f, _ := os.OpenFile("/home/lbf/文档/bookmarks.html", os.O_RDONLY, 0644)
 
-	htmlparser.HtmlParser(data)
+	list, err := htmlparser.HtmlParser(f)
+	if err != nil {
+		panic(err)
+	}
+	dbsource.InitDB()
+
+	curd.ImportMarks(list)
 }
