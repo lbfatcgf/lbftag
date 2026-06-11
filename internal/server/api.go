@@ -1,12 +1,13 @@
 package server
 
 import (
-	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/lbfatcgf/lbftag/internal/dbsource/curd"
 	"github.com/lbfatcgf/lbftag/internal/htmlparser"
 	"github.com/lbfatcgf/lbftag/internal/models"
+	AjaxRes "github.com/lbfatcgf/lbftag/internal/models/ajaxRes"
 )
 
 func initApi(route *http.ServeMux) {
@@ -14,7 +15,10 @@ func initApi(route *http.ServeMux) {
 	route.HandleFunc("/index", index)
 	route.HandleFunc("/favicon.svg", favicon)
 	route.HandleFunc("POST /api/mark/import/html", importFromHtml)
-	route.HandleFunc("GET /api/mark", getMarks)
+	route.HandleFunc("GET /api/marks", getMarks)
+	route.HandleFunc("GET /api/mark/{code}", getMark)
+	route.HandleFunc("PUT /apt/mark", updateMark)
+	route.HandleFunc("DELETE /api/mark/{code}", deleteMark)
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
@@ -49,24 +53,7 @@ func importFromHtml(w http.ResponseWriter, r *http.Request) {
 		errRequset(w, "400", err)
 		return
 	}
-	responseJson(w, models.ResponseData{
-		Code: "200",
-		Data: "",
-		Msg:  "ok",
-	})
-}
-
-func errRequset(w http.ResponseWriter, code string, err error) {
-	responseJson(w, models.ResponseData{
-		Code: code, Data: err.Error(), Msg: err.Error(),
-	})
-}
-
-func responseJson(w http.ResponseWriter, data models.ResponseData) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(data)
-
+	responseJson(w, AjaxRes.Success("ok"))
 }
 
 func getMarks(w http.ResponseWriter, r *http.Request) {
@@ -76,10 +63,49 @@ func getMarks(w http.ResponseWriter, r *http.Request) {
 		errRequset(w, "400", err)
 		return
 	}
-	responseJson(w, models.ResponseData{
-		Code: "200",
-		Data: list,
-		Msg:  "ok",
-	})
+	responseJson(w, AjaxRes.Success(list))
 
+}
+
+func getMark(w http.ResponseWriter, r *http.Request) {
+	code := r.PathValue("code")
+	if code == "" {
+		errRequset(w, "400", errors.New("code 错误"))
+		return
+	}
+	res, err := curd.QueryMark(code)
+	if err != nil {
+		errRequset(w, "400", err)
+		return
+	}
+	responseJson(w, AjaxRes.Success(res))
+}
+
+func updateMark(w http.ResponseWriter, r *http.Request) {
+
+	m, err := decodeJSONBody[models.MarkNode](r)
+	if err != nil {
+		errRequset(w, "400", err)
+		return
+	}
+	err = curd.UpdateMark(m)
+	if err != nil {
+		errRequset(w, "400", err)
+		return
+	}
+	responseJson(w, AjaxRes.Success("ok"))
+}
+
+func deleteMark(w http.ResponseWriter, r *http.Request) {
+	code := r.PathValue("code")
+	if code == "" {
+		errRequset(w, "400", errors.New("code 错误"))
+		return
+	}
+	err := curd.DeleteMark(code)
+	if err != nil {
+		errRequset(w, "400", err)
+		return
+	}
+	responseJson(w, AjaxRes.Success("ok"))
 }

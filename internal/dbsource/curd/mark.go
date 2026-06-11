@@ -19,11 +19,15 @@ func QueryMarks(pCode string) (list []models.MarkNode, err error) {
 	err = dbsource.Db().Where("parent = ?", pCode).Find(&list).Error
 	return
 }
-func UpdateMarks(data models.MarkNode) error {
+func QueryMark(code string) (res models.MarkNode, err error) {
+	err = dbsource.Db().Where("parent = ?", code).First(&res).Error
+	return
+}
+func UpdateMark(data models.MarkNode) error {
 	return dbsource.Db().Save(&data).Error
 }
 
-func DeleteMarks(code string) error {
+func DeleteMark(code string) error {
 	ctx := context.Background()
 	return dbsource.Db().Where("code = ?", code).Delete(ctx).Error
 }
