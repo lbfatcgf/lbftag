@@ -1,4 +1,3 @@
-import { reactive } from "vue";
 import { type BookMarkerNode } from "../models/book_marker";
 import type { BookMarkerPath } from "../models/book_marker_path";
 import type { BookMarkerFrom } from "../models/book_marker_from";
@@ -32,6 +31,7 @@ export const useBookMarkStore = defineStore('bookMark', {
             const res = await markApi.list(code)
             if (res.code === "200") {
                 this.bookMarker = res.data ?? [];
+                this.bookMarker.sort(sortBookMarker)
                 return
             }
             notifi.error({
@@ -46,9 +46,11 @@ export const useBookMarkStore = defineStore('bookMark', {
         },
         updateMarker(mf: BookMarkerFrom) {
 
+            console.log(mf);
 
         },
         addMarker(add: BookMarkerAdd) {
+            console.log(add);
 
         },
         async clickMarker(node: BookMarkerNode) {
@@ -92,10 +94,11 @@ export const useBookMarkStore = defineStore('bookMark', {
             }
         },
         importFormHtml(file: File) {
+            console.log(file.name);
 
         },
         importFormJson(file: File) {
-
+            console.log(file.name);
         },
 
 
