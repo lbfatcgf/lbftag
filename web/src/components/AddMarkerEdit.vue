@@ -14,14 +14,14 @@
                 <n-radio key="dir" value="dir">目录</n-radio>
             </n-space>
         </n-radio-group>
-        <n-input v-if="f.type === 'link'" v-model:value="f.href">
+        <n-input v-if="f.type === 'link'" v-model:value="f.url">
             <template #prefix>
                 <div style="width: 70px;">
                     链接
                 </div>
             </template>
         </n-input>
-        <n-input v-model:value="f.iconHref">
+        <n-input v-model:value="f.icon">
             <template #prefix>
                 <div style="width: 70px;">
                     图标链接
@@ -38,18 +38,21 @@ import {
     NFlex, NInput, NRadioGroup, NSpace, NRadio,
     NButton, useDialog
 } from 'naive-ui';
-import { BookMarkerStore } from '../store/book_marker_stroe';
-const f = ref<import('../models/book_marker_add').BookMarkerAdd>(
+import { useBookMarkStore } from '../store/book_marker_stroe';
+import { BookMarkerAdd } from '../models/book_marker_add';
+const markStore=useBookMarkStore()
+const f = ref<BookMarkerAdd>(
     {
         tagName: '',
-        href: '',
-        iconHref: '',
-        type: 'link'
+        url: '',
+        icon: '',
+        type: 'link',
+        parent: ''
     }
 )
 const dialog = useDialog()
 function add() {
-    BookMarkerStore.addMarker(f.value)
+    markStore.addMarker(f.value)
     dialog.destroyAll()
 }
 </script>

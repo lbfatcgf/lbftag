@@ -24,9 +24,10 @@
 import { NFlex, NIcon, useDialog } from 'naive-ui';
 import { FolderRegular, Link } from '@vicons/fa'
 import type { BookMarkerNode } from '../models/book_marker';
-import { BookMarkerStore } from '../store/book_marker_stroe';
+import { useBookMarkStore } from '../store/book_marker_stroe';
 import BookMarkerEdit from './BookMarkerEdit.vue';
 import { h, onMounted, ref } from 'vue';
+const markStore=useBookMarkStore()
 const dialog = useDialog()
 const props = defineProps<{
     bm: BookMarkerNode,
@@ -64,7 +65,7 @@ let isTouching = false
 let longPressTimer: number | null = null
 
 function openEditDialog() {
-    BookMarkerStore.editMarkerIndex = props.bmIndex
+    markStore.editMarkerIndex = props.bmIndex
     dialog.create(
         {
             title: '编辑标签',
@@ -75,21 +76,21 @@ function openEditDialog() {
             },
             onMaskClick() {
                 console.log('close dialog');
-                BookMarkerStore.editMarkerIndex = null
+                markStore.editMarkerIndex = null
             },
             onClose() {
                 console.log('close dialog');
 
-                BookMarkerStore.editMarkerIndex = null
+                markStore.editMarkerIndex = null
             },
         }
     )
 }
 function handleClick() {
     if (props.bm.type === 'dir')
-        BookMarkerStore.clickMarker(props.bm, props.bmIndex)
+        markStore.clickMarker(props.bm)
     else
-        window.open(props.bm.href!, "_blank")
+        window.open(props.bm.url!, "_blank")
 }
 function realIcon(): string {
     if (props.bm.icon) {

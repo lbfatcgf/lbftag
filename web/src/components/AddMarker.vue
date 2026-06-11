@@ -16,12 +16,13 @@
 <script setup lang="ts">
 import { NIcon, NPopover, useDialog } from 'naive-ui';
 import { Plus } from '@vicons/fa'
-import { BookMarkerStore } from '../store/book_marker_stroe';
+import { useBookMarkStore } from '../store/book_marker_stroe';
 import { h } from 'vue';
 import AddMarkerEdit from './AddMarkerEdit.vue';
+const markStore=useBookMarkStore()
 const dialog = useDialog()
 function add() {
-    let p = BookMarkerStore.markerPath.map((item) => (item.tagName === '/' ? '..' : item.tagName)).join('/')
+    let p = markStore.markerPath.map((item) => (item.tagName === '/' ? '..' : item.tagName)).join('/')
 
 
     dialog.create(

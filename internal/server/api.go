@@ -8,6 +8,7 @@ import (
 	"github.com/lbfatcgf/lbftag/internal/htmlparser"
 	"github.com/lbfatcgf/lbftag/internal/models"
 	AjaxRes "github.com/lbfatcgf/lbftag/internal/models/ajaxRes"
+	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 func initApi(route *http.ServeMux) {
@@ -19,6 +20,7 @@ func initApi(route *http.ServeMux) {
 	route.HandleFunc("GET /api/mark/{code}", getMark)
 	route.HandleFunc("PUT /apt/mark", updateMark)
 	route.HandleFunc("DELETE /api/mark/{code}", deleteMark)
+	route.HandleFunc("POST /api/mark", addMark)
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
@@ -103,6 +105,26 @@ func deleteMark(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	err := curd.DeleteMark(code)
+	if err != nil {
+		errRequset(w, "400", err)
+		return
+	}
+	responseJson(w, AjaxRes.Success("ok"))
+}
+
+func addMark(w http.ResponseWriter, r *http.Request) {
+	m, err := decodeJSONBody[models.MarkNode](r)
+	if err != nil {
+		errRequset(w, "400", err)
+		return
+	}
+	code, err := gonanoid.New()
+	if err != nil {
+		errRequset(w, "400", err)
+		return
+	}
+	m.Code = code
+	err = curd.AddMark(&m)
 	if err != nil {
 		errRequset(w, "400", err)
 		return

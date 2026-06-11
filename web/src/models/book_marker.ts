@@ -1,11 +1,17 @@
 
 
 export type BookMarkerNode = {
-    tagName: string;
-    type: 'link' | 'dir';
-    href: string | null | undefined;
-    icon: string | null | undefined;
-    children: Array<BookMarkerNode> | BookMarkerNode[];
-
+    ID?:          number;
+    CreatedAt?:   string;
+    UpdatedAt?:   string;
+    DeletedAt?:   string;
+    type:        string;
+    icon:        string;
+    url:         string;
+    tagName:     string;
+    code:        string;
+    paren?:      string;
+    hasChildren: boolean;
+    deep:        number;
 }
 

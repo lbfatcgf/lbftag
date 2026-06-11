@@ -5,9 +5,9 @@
             <n-flex style="width: 100%;" align="center" justify="space-between">
                 <n-scrollbar style="flex: 1;" :x-scrollable="true">
                     <n-breadcrumb>
-                        <n-breadcrumb-item style="font-size: 18px;" v-for="(value, index) in BookMarkerStore.markerPath"
-                            :clickable="BookMarkerStore.markerPath.length - 1 > index"
-                            @click="BookMarkerStore.backMarkerPath(index)">
+                        <n-breadcrumb-item style="font-size: 18px;" v-for="(value, index) in markStore.markerPath"
+                            :clickable="markStore.markerPath.length - 1 > index"
+                            @click="markStore.backMarkerPath(index)">
                             {{ value.tagName === '/' ? '..' : value.tagName }}
                         </n-breadcrumb-item>
                     </n-breadcrumb>
@@ -50,7 +50,8 @@ import {
 import { EllipsisV } from '@vicons/fa'
 import { ref } from 'vue';
 import BookMarkerTree from './BookMarkerTree.vue'
-import { BookMarkerStore } from '../store/book_marker_stroe.js';
+import { useBookMarkStore } from '../store/book_marker_stroe.js';
+const markStore=useBookMarkStore()
 const inputHtml = ref<HTMLInputElement>()
 const inputLbftagJson = ref<HTMLInputElement>()
 const openDialog = ref(false)
@@ -75,7 +76,7 @@ function handleInputHtml(event: Event) {
         return
     }
     // mbTree.value?.inputFile(file)
-    BookMarkerStore.importFormHtml(file)
+    markStore.importFormHtml(file)
     openDialog.value = false
 }
 function handleInputJson(event: Event) {
@@ -85,7 +86,7 @@ function handleInputJson(event: Event) {
         return
     }
     // mbTree.value?.inputFile(file)
-    BookMarkerStore.importFormJson(file)
+    markStore.importFormJson(file)
     openDialog.value = false
 }
 function handleSelect(key: string) {
@@ -96,10 +97,10 @@ function handleSelect(key: string) {
 
     }
     if (key === "export") {
-     BookMarkerStore.exportFile()   
+     markStore.exportFile()   
     }
     if(key==='clear'){
-        BookMarkerStore.clearAll()
+        markStore.clearAll()
     }
 }
 // const cuurentBMDir = ref<Array<string>>(["/"])

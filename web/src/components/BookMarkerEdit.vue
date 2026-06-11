@@ -22,13 +22,14 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { BookMarkerStore } from '../store/book_marker_stroe';
+import { useBookMarkStore } from '../store/book_marker_stroe';
 import type { BookMarkerFrom } from '../models/book_marker_from'
 import {
     NInput, NFlex,
     NButton, useNotification,
     useDialog
 } from 'naive-ui';
+const markStore= useBookMarkStore()
 const markerFrom = ref<BookMarkerFrom>({
     tagName: '',
     href: '',
@@ -37,18 +38,19 @@ const markerFrom = ref<BookMarkerFrom>({
 const dialog = useDialog()
 const notification = useNotification()
 onMounted(() => {
-    markerFrom.value.tagName = BookMarkerStore.currentMarker.children[BookMarkerStore.editMarkerIndex!].tagName
-    markerFrom.value.href = BookMarkerStore.currentMarker.children[BookMarkerStore.editMarkerIndex!].href ?? ''
-    markerFrom.value.iconHref = BookMarkerStore.currentMarker.children[BookMarkerStore.editMarkerIndex!].icon ?? ''
+    // markerFrom.value.tagName = markStore.currentMarker.children[markStore.editMarkerIndex!].tagName
+    // markerFrom.value.href = markStore.currentMarker.children[markStore.editMarkerIndex!].url ?? ''
+    // markerFrom.value.iconHref = markStore.currentMarker.children[markStore.editMarkerIndex!].icon ?? ''
 })
 function markerType(): 'link' | 'dir' {
-    if (BookMarkerStore.editMarkerIndex === null) return 'link'
-    return BookMarkerStore.currentMarker.children[BookMarkerStore.editMarkerIndex!].type
+    // if (markStore.editMarkerIndex === null) return 'link'
+    // return markStore.currentMarker.children[markStore.editMarkerIndex!].type
+    return 'link'
 }
 function remove() {
 
-    BookMarkerStore.removeMarker()
-    BookMarkerStore.editMarkerIndex = null
+    markStore.removeMarker()
+    markStore.editMarkerIndex = null
     dialog.destroyAll()
     notification.success({
         content: '移除成功',
@@ -59,8 +61,8 @@ function remove() {
 function save() {
 
 
-    BookMarkerStore.updateMarker(markerFrom.value)
-    BookMarkerStore.editMarkerIndex = null
+    markStore.updateMarker(markerFrom.value)
+    markStore.editMarkerIndex = null
     dialog.destroyAll()
     notification.success({
         content: '修改成功',
