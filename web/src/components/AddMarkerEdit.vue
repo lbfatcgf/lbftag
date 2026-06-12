@@ -28,31 +28,65 @@
                 </div>
             </template>
         </n-input>
-        <n-button type="primary" @click="add">添加</n-button>
+        <n-button type="primary" @click="add" :loading="isAdding">添加</n-button>
     </n-flex>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import {
     NFlex, NInput, NRadioGroup, NSpace, NRadio,
-    NButton, useDialog
+    NButton, useDialog,
+    useNotification
 } from 'naive-ui';
 import { useBookMarkStore } from '../store/book_marker_stroe';
-import { BookMarkerAdd } from '../models/book_marker_add';
-const markStore=useBookMarkStore()
-const f = ref<BookMarkerAdd>(
+
+import { BookMarkerNode } from '../models/book_marker';
+import { MarkApi } from '../api/marks';
+const mApi = new MarkApi()
+const markStore = useBookMarkStore()
+const f = ref<BookMarkerNode>(
     {
         tagName: '',
         url: '',
         icon: '',
         type: 'link',
-        parent: ''
+        code: '',
+        hasChildren: false,
+        deep: 0
     }
 )
+const notification = useNotification()
 const dialog = useDialog()
+const isAdding = ref(false)
 function add() {
-    markStore.addMarker(f.value)
-    dialog.destroyAll()
+    isAdding.value = true
+    mApi.addMark(f.value)
+        .then(res => {
+            isAdding.value = false
+            if (res.code === '200') {
+                markStore.loadMarker()
+                dialog.destroyAll()
+                return
+            }
+            notification.error({
+                content: JSON.stringify(res)
+            })
+        })
+        .catch(e => {
+            isAdding.value = false
+            notification.error({
+                content: JSON.stringify(e)
+            })
+        })
 }
+
+function init() {
+    f.value.parent = markStore.markerPath[markStore.markerPath.length - 1].code
+    f.value.deep = markStore.markerPath[markStore.markerPath.length - 1].deep + 1
+
+}
+onMounted(() => {
+    init()
+});
 </script>

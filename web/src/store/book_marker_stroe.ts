@@ -1,12 +1,10 @@
 import { type BookMarkerNode } from "../models/book_marker";
 import type { BookMarkerPath } from "../models/book_marker_path";
-import type { BookMarkerFrom } from "../models/book_marker_from";
-import type { BookMarkerAdd } from "../models/book_marker_add";
-import { MarkApi } from "../apt/marks";
+import { MarkApi } from "../api/marks";
 import { useNotification } from "naive-ui";
 import { defineStore } from "pinia";
 const markApi = new MarkApi();
-const notifi = useNotification();
+
 
 
 function sortBookMarker(a: BookMarkerNode, b: BookMarkerNode): number {
@@ -19,8 +17,8 @@ export const useBookMarkStore = defineStore('bookMark', {
         return {
             bookMarker: [] as BookMarkerNode[],
 
-            markerPath: [{ code: '', tagName: "/" }] as BookMarkerPath[],
-            editMarkerIndex: null as number | null,
+            markerPath: [{ code: '', tagName: "/", deep: 0 }] as BookMarkerPath[],
+            editMarkerCode: '',
             loadingMark: false,
         }
     },
@@ -34,26 +32,13 @@ export const useBookMarkStore = defineStore('bookMark', {
                 this.bookMarker.sort(sortBookMarker)
                 return
             }
+            const notifi = useNotification();
             notifi.error({
                 title: JSON.stringify(res),
             })
         },
-        saveMarker() {
-
-        },
-        removeMarker() {
-
-        },
-        updateMarker(mf: BookMarkerFrom) {
-
-            console.log(mf);
-
-        },
-        addMarker(add: BookMarkerAdd) {
-            console.log(add);
-
-        },
         async clickMarker(node: BookMarkerNode) {
+            const notifi = useNotification();
             try {
                 const res = await markApi.list(node.code)
 
@@ -61,7 +46,8 @@ export const useBookMarkStore = defineStore('bookMark', {
                     this.bookMarker = res.data ?? []
                     this.markerPath.push({
                         code: node.code,
-                        tagName: node.tagName
+                        tagName: node.tagName,
+                        deep: node.deep
                     })
                     return
                 }
@@ -93,8 +79,17 @@ export const useBookMarkStore = defineStore('bookMark', {
 
             }
         },
-        importFormHtml(file: File) {
-            console.log(file.name);
+        async importFormHtml(file: File) {
+            try {
+
+                await markApi.importMarks(file)
+
+                this.loadMarker()
+            } catch (err) {
+                console.log(err);
+
+            }
+
 
         },
         importFormJson(file: File) {
@@ -104,19 +99,16 @@ export const useBookMarkStore = defineStore('bookMark', {
 
 
 
-        clearAll() {
+        async clearAll() {
+            try {
 
-        },
-        exportFile() {
-            // const data = bookMarkerNodeToJson(this.bookMarker)
-            // const blob = new Blob([data], { type: 'application/json' })
-            // const url = URL.createObjectURL(blob)
-            // const a = document.createElement('a')
-            // a.href = url;
-            // a.download = 'bookmarks.lbftag.json';
-            // a.click()
+                await markApi.clearAll()
+            } catch {
 
+            }
+            this.loadMarker()
         },
+
     }
 
 })

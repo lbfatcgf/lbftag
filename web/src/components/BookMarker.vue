@@ -13,7 +13,7 @@
                     </n-breadcrumb>
                 </n-scrollbar>
                 <n-dropdown trigger="click" :options="setOption" @select="handleSelect">
-                    <n-button quaternary circle>
+                    <n-button quaternary circle :loading="isImporting">
                         <n-icon color="#ffffff79">
                             <EllipsisV></EllipsisV>
                         </n-icon>
@@ -31,9 +31,6 @@
                     <input ref="inputHtml" type="file" accept=".html" style="display:none;" @change="handleInputHtml">
                     <n-button type="info" @click="inputHtml?.click()">从html导入</n-button>
 
-                    <input ref="inputLbftagJson" type="file" accept=".lbftag.json" style="display:none;"
-                        @change="handleInputJson">
-                    <n-button type="info" @click="inputLbftagJson?.click()">从lbftag.json导入</n-button>
                     <n-button @click="openDialog = false" type="error">关闭</n-button>
                 </n-flex>
             </GlassBox>
@@ -51,9 +48,9 @@ import { EllipsisV } from '@vicons/fa'
 import { ref } from 'vue';
 import BookMarkerTree from './BookMarkerTree.vue'
 import { useBookMarkStore } from '../store/book_marker_stroe.js';
-const markStore=useBookMarkStore()
+const markStore = useBookMarkStore()
 const inputHtml = ref<HTMLInputElement>()
-const inputLbftagJson = ref<HTMLInputElement>()
+
 const openDialog = ref(false)
 const setOption: DropdownOption[] = [
     {
@@ -61,45 +58,37 @@ const setOption: DropdownOption[] = [
         key: "import",
     },
     {
-        label: "导出",
-        key: "export",
-    },
-    {
         label: "清空",
         key: "clear"
     }
 ]
+const isImporting = ref(false)
 function handleInputHtml(event: Event) {
     const target = event.target as HTMLInputElement
     var file = target.files?.[0];
     if (!file) {
         return
     }
-    // mbTree.value?.inputFile(file)
-    markStore.importFormHtml(file)
-    openDialog.value = false
+    isImporting.value = true
+    markStore.importFormHtml(file).then(() => {
+
+        openDialog.value = false
+        isImporting.value = false
+    }).catch(() => {
+        isImporting.value = false
+        openDialog.value = false
+
+    })
 }
-function handleInputJson(event: Event) {
-    const target = event.target as HTMLInputElement
-    var file = target.files?.[0];
-    if (!file) {
-        return
-    }
-    // mbTree.value?.inputFile(file)
-    markStore.importFormJson(file)
-    openDialog.value = false
-}
+
 function handleSelect(key: string) {
 
 
     if (key === "import") {
         openDialog.value = true
+    }
 
-    }
-    if (key === "export") {
-     markStore.exportFile()   
-    }
-    if(key==='clear'){
+    if (key === 'clear') {
         markStore.clearAll()
     }
 }
@@ -121,5 +110,4 @@ function handleSelect(key: string) {
 .talet {
     width: 90%;
 }
-
 </style>

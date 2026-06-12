@@ -31,7 +31,6 @@ const markStore=useBookMarkStore()
 const dialog = useDialog()
 const props = defineProps<{
     bm: BookMarkerNode,
-    bmIndex: number
 }>()
 const markerRef = ref<HTMLElement | null>(null)
 const canShowIcon = ref(true)
@@ -65,7 +64,7 @@ let isTouching = false
 let longPressTimer: number | null = null
 
 function openEditDialog() {
-    markStore.editMarkerIndex = props.bmIndex
+    markStore.editMarkerCode = props.bm.code
     dialog.create(
         {
             title: '编辑标签',
@@ -76,12 +75,12 @@ function openEditDialog() {
             },
             onMaskClick() {
                 console.log('close dialog');
-                markStore.editMarkerIndex = null
+                markStore.editMarkerCode = ''
             },
             onClose() {
                 console.log('close dialog');
 
-                markStore.editMarkerIndex = null
+                markStore.editMarkerCode = ''
             },
         }
     )

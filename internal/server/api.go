@@ -2,6 +2,7 @@ package server
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/lbfatcgf/lbftag/internal/dbsource/curd"
@@ -18,9 +19,10 @@ func initApi(route *http.ServeMux) {
 	route.HandleFunc("POST /api/mark/import/html", importFromHtml)
 	route.HandleFunc("GET /api/marks", getMarks)
 	route.HandleFunc("GET /api/mark/{code}", getMark)
-	route.HandleFunc("PUT /apt/mark", updateMark)
+	route.HandleFunc("PUT /api/mark", updateMark)
 	route.HandleFunc("DELETE /api/mark/{code}", deleteMark)
 	route.HandleFunc("POST /api/mark", addMark)
+	route.HandleFunc("POST /api/mark/clearAll", clearAll)
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
@@ -87,11 +89,13 @@ func updateMark(w http.ResponseWriter, r *http.Request) {
 
 	m, err := decodeJSONBody[models.MarkNode](r)
 	if err != nil {
+		fmt.Printf("%+v\n", err)
 		errRequset(w, "400", err)
 		return
 	}
 	err = curd.UpdateMark(m)
 	if err != nil {
+		fmt.Printf("%+v\n", err)
 		errRequset(w, "400", err)
 		return
 	}
@@ -120,12 +124,24 @@ func addMark(w http.ResponseWriter, r *http.Request) {
 	}
 	code, err := gonanoid.New()
 	if err != nil {
+		fmt.Printf("%+v\n", err)
 		errRequset(w, "400", err)
 		return
 	}
 	m.Code = code
 	err = curd.AddMark(&m)
 	if err != nil {
+		fmt.Printf("%+v\n", err)
+		errRequset(w, "400", err)
+		return
+	}
+	responseJson(w, AjaxRes.Success("ok"))
+}
+
+func clearAll(w http.ResponseWriter, r *http.Request) {
+	err := curd.ClearAll()
+	if err != nil {
+		fmt.Printf("%+v\n", err)
 		errRequset(w, "400", err)
 		return
 	}

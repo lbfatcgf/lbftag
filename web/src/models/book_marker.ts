@@ -10,7 +10,7 @@ export type BookMarkerNode = {
     url:         string;
     tagName:     string;
     code:        string;
-    paren?:      string;
+    parent?:      string;
     hasChildren: boolean;
     deep:        number;
 }

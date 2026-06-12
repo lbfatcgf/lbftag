@@ -1,7 +1,7 @@
 <template>
 	<div style="width: 100%;">
 		<n-flex v-if="markStore.bookMarker.length > 0" style="width: 100%; position: relative;">
-			<BookMarkerItem :bm-index="index" :bm="value" v-for="(value, index) in markStore.bookMarker"
+			<BookMarkerItem  :bm="value" v-for="(value, index) in markStore.bookMarker"
 				:key="value.tagName + index">
 
 			</BookMarkerItem>
@@ -60,16 +60,5 @@ async function init() {
 </script>
 
 <style scoped>
-.loading {
-	position: absolute;
-	top: 0px;
-	bottom: 0px;
-	right: 0px;
-	left: 0px;
-	backdrop-filter: blur(5px);
-	background-color: rgba(0, 0, 0, 0.4);
-}
-.unloading{
-	display: none;
-}
+
 </style>

@@ -1,4 +1,5 @@
 export type BookMarkerPath = {
     tagName:string, 
-    code:string
+    code:string,
+    deep:number
 }

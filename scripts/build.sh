@@ -31,9 +31,8 @@ fi
 
 if $buildGo; then
     pwd
+    export GOEXPERIMENT=jsonv2
     go build  -tags=systray_nogtk -o dist/lbftag cmd/main.go
 
     echo "编译go完成"
 fi
-
- 
