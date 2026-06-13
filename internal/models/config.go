@@ -9,8 +9,9 @@ import (
 )
 
 type Config struct {
-	Port int    `toml:"port" json:"port"`
-	Host string `toml:"host" json:"host"`
+	Port         int    `toml:"port" json:"port"`
+	Host         string `toml:"host" json:"host"`
+	DefaultEngin string `toml:"defaultEngin" json:"defaultEngin"`
 }
 
 func (c *Config) Hosts() string {
@@ -62,18 +63,19 @@ func ReadConfig() {
 		panic(err)
 	}
 
-	var config Config
-	err = toml.Unmarshal(data, &config)
+	config := defaultConfig()
+	err = toml.Unmarshal(data, config)
 	if err != nil {
 		panic(err)
 	}
-	conf = &config
+	conf = config
 	// fmt.Println(conf)
 }
 func defaultConfig() *Config {
 	return &Config{
-		Port: 6677,
-		Host: "0.0.0.0",
+		Port:         6677,
+		Host:         "0.0.0.0",
+		DefaultEngin: "bing",
 	}
 }
 
@@ -83,4 +85,16 @@ func GetConfig() *Config {
 	}
 
 	return conf
+}
+func SaveConfig() error {
+	confDir, err := os.UserConfigDir()
+	if err != nil {
+		return err
+	}
+	data := make([]byte, 0)
+	data, err = toml.Marshal(conf)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(confDir+"/lbftag/conf.toml", data, os.ModePerm)
 }

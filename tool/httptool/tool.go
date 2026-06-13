@@ -10,13 +10,14 @@ import (
 	AjaxRes "github.com/lbfatcgf/lbftag/internal/models/ajaxRes"
 )
 
-func errRequset(w http.ResponseWriter, code string, err error) {
-	responseJson(w, AjaxRes.ResponseData{
+func ErrRequset(w http.ResponseWriter, code string, err error) {
+	fmt.Printf("%+v\n", err)
+	ResponseJson(w, AjaxRes.ResponseData{
 		Code: code, Data: err.Error(), Msg: err.Error(),
 	})
 }
 
-func responseJson(w http.ResponseWriter, data AjaxRes.ResponseData) {
+func ResponseJson(w http.ResponseWriter, data AjaxRes.ResponseData) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
@@ -26,7 +27,7 @@ func responseJson(w http.ResponseWriter, data AjaxRes.ResponseData) {
 
 // DecodeJSONBody 从 HTTP 请求中读取 JSON 并解码为指定类型 T。
 // 返回解码后的值及可能的错误。
-func decodeJSONBody[T any](r *http.Request) (T, error) {
+func DecodeJSONBody[T any](r *http.Request) (T, error) {
 	var result T
 	defer r.Body.Close()
 

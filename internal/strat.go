@@ -1,8 +1,11 @@
 package internal
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/lbfatcgf/lbftag/internal/dbsource"
 	"github.com/lbfatcgf/lbftag/internal/models"
@@ -14,8 +17,17 @@ func Start() {
 	createDbFile()
 	dbsource.InitDB()
 	models.ReadConfig()
-	server.StratHttp()
+	go server.StratHttp()
 	StartTuoPan()
+
+	// 监听系统信号，优雅关闭
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+	<-sigCh
+
+	fmt.Println("正在关闭服务...")
+	ctx := context.Background()
+	server.Stop(ctx)
 }
 
 func createConfigDir() {

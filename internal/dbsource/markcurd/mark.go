@@ -1,4 +1,4 @@
-package curd
+package markcurd
 
 import (
 	"context"
