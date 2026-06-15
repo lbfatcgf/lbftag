@@ -1,7 +1,7 @@
 <template>
     <div>
         <n-flex>
-            <div v-for="item in seStore.engines" :key="item.title" style="width: 100%;" >
+            <div v-for="item in seStore.engines" :key="item.title" style="width: 100%;">
                 <n-flex justify="space-between" style="width: 100%;" align="center">
 
                     <div>
@@ -25,40 +25,40 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { NFlex,NInput,NButton,NDivider, createDiscreteApi } from 'naive-ui';
+import { NFlex, NInput, NButton, NDivider, createDiscreteApi } from 'naive-ui';
 import { useSerchEngineStore } from '../store/search_engins_stroe';
 import { SearchEngine } from '../models/search_engin';
 
-const seStore=useSerchEngineStore()
+const seStore = useSerchEngineStore()
 
-const addEngin=ref<SearchEngine>({
-    title:'',link:''
+const addEngin = ref<SearchEngine>({
+    title: '', link: ''
 })
-const { message  } = createDiscreteApi(
-  ['message', ],
+const { message } = createDiscreteApi(
+    ['message',],
 )
-const isAdding=ref(false)
+const isAdding = ref(false)
 function add() {
-    isAdding.value=true
-    seStore.addEngines(addEngin.value).then(res=>{
+    isAdding.value = true
+    seStore.addEngines(addEngin.value).then(() => {
         seStore.loadEngines()
-        isAdding.value=false
-        addEngin.value= {title:'',link:''}
-    }).catch(err=>{
-        isAdding.value=false
+        isAdding.value = false
+        addEngin.value = { title: '', link: '' }
+    }).catch(() => {
+        isAdding.value = false
 
     })
 }
 
-function deleteSe(se : SearchEngine) {
-    if (se.ID===null){
+function deleteSe(se: SearchEngine) {
+    if (se.ID === null) {
         return
     }
-    if (se.title===seStore.currentEngine){
+    if (se.title === seStore.currentEngine) {
         message.error('不能删除默认搜索引擎')
         return
     }
-    seStore.deleteEnigne(se.ID!).then(()=>{
+    seStore.deleteEnigne(se.ID!).then(() => {
         seStore.loadEngines()
     })
 }
