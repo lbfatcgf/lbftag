@@ -6,7 +6,8 @@ import TimeBox from './components/TimeBox.vue';
 import {
   NDialogProvider, NConfigProvider, zhCN, dateZhCN,
   NNotificationProvider,
-  NFlex
+  NFlex,
+  NMessageProvider
 } from 'naive-ui'
 
 </script>
@@ -15,16 +16,18 @@ import {
   <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
     <n-notification-provider>
       <n-dialog-provider>
-        <AppContent class="column">
-          <div class="tb">
-            <n-flex style="width: 100%;" justify="end">
-              <TimeBox style="margin-right: 20px;margin-top: 20px;" />
-            </n-flex>
-          </div>
-          <SearchBox />
-          <BookMarker />
-          <div />
-        </AppContent>
+        <n-message-provider>
+          <AppContent class="column">
+            <div class="tb">
+              <n-flex style="width: 100%;" justify="end">
+                <TimeBox style="margin-right: 20px;margin-top: 20px;" />
+              </n-flex>
+            </div>
+            <SearchBox />
+            <BookMarker />
+            <div />
+          </AppContent>
+        </n-message-provider>
       </n-dialog-provider>
     </n-notification-provider>
   </n-config-provider>

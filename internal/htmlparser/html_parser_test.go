@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/lbfatcgf/lbftag/internal/dbsource"
-	"github.com/lbfatcgf/lbftag/internal/dbsource/curd"
+	"github.com/lbfatcgf/lbftag/internal/dbsource/markcurd"
 	"github.com/lbfatcgf/lbftag/internal/htmlparser"
 )
 
@@ -18,5 +18,5 @@ func TestHtmlParser(t *testing.T) {
 	}
 	dbsource.InitDB()
 
-	curd.ImportMarks(list)
+	markcurd.ImportMarks(list)
 }

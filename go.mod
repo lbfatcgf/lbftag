@@ -5,6 +5,7 @@ go 1.26.0
 require (
 	github.com/PuerkitoBio/goquery v1.12.0
 	github.com/gen2brain/beeep v0.11.2
+	github.com/lmittmann/tint v1.1.3
 	github.com/matoous/go-nanoid/v2 v2.1.0
 	github.com/pelletier/go-toml/v2 v2.3.1
 	gorm.io/driver/sqlite v1.6.0

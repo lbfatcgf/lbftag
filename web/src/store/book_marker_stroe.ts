@@ -1,11 +1,14 @@
 import { type BookMarkerNode } from "../models/book_marker";
 import type { BookMarkerPath } from "../models/book_marker_path";
 import { MarkApi } from "../api/marks";
-import { useNotification } from "naive-ui";
+import { createDiscreteApi, type NotificationApi } from "naive-ui";
 import { defineStore } from "pinia";
 const markApi = new MarkApi();
 
+const { notifi } = createDiscreteApi(
+    ['notification'],
 
+)
 
 function sortBookMarker(a: BookMarkerNode, b: BookMarkerNode): number {
     let al = a.type === 'dir' ? 1 : 0
@@ -32,13 +35,13 @@ export const useBookMarkStore = defineStore('bookMark', {
                 this.bookMarker.sort(sortBookMarker)
                 return
             }
-            const notifi = useNotification();
-            notifi.error({
+
+            (notifi as NotificationApi).error({
                 title: JSON.stringify(res),
             })
         },
         async clickMarker(node: BookMarkerNode) {
-            const notifi = useNotification();
+
             try {
                 const res = await markApi.list(node.code)
 
@@ -51,11 +54,11 @@ export const useBookMarkStore = defineStore('bookMark', {
                     })
                     return
                 }
-                notifi.error({
+                (notifi as NotificationApi).error({
                     title: JSON.stringify(res),
                 })
             } catch (error) {
-                notifi.error({
+                (notifi as NotificationApi).error({
                     title: (error as Error).message,
                 })
             }

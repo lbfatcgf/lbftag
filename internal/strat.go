@@ -10,6 +10,7 @@ import (
 	"github.com/lbfatcgf/lbftag/internal/dbsource"
 	"github.com/lbfatcgf/lbftag/internal/models"
 	"github.com/lbfatcgf/lbftag/internal/server"
+	logtool "github.com/lbfatcgf/lbftag/tool/logtool"
 )
 
 func Start() {
@@ -28,6 +29,7 @@ func Start() {
 	fmt.Println("正在关闭服务...")
 	ctx := context.Background()
 	server.Stop(ctx)
+	logtool.CloseAllLog()
 }
 
 func createConfigDir() {

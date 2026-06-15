@@ -2,6 +2,7 @@
   <div class="glass searchBox">
     <n-dropdown :options="seStore.enginesOptions()" @select="updateEngine">
       <n-button quaternary size="large" style="width: 80px;">{{ seStore.currentEngine }}</n-button>
+
     </n-dropdown>
     <n-input style="border-radius: 12px;" v-model:value="searchContext" type="text" @keydown="finish" placeholder="">
       <template #suffix>
@@ -20,12 +21,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { NInput, NIcon, NButton, NDropdown, type DropdownOption } from 'naive-ui'
+import { h, onMounted, ref } from 'vue';
+import { NInput, NIcon, NButton, NDropdown, type DropdownOption, useDialog } from 'naive-ui'
 import { Search } from '@vicons/fa'
 import { useSerchEngineStore } from '../store/search_engins_stroe';
-
-const seStore=useSerchEngineStore()
+import SearchEnginEdit from './SearchEnginEdit.vue';
+const dialog = useDialog()
+const seStore = useSerchEngineStore()
 const searchContext = ref<string>('');
 
 const enginesOptions = ref<Array<DropdownOption>>(new Array())
@@ -37,16 +39,33 @@ function finish(event: KeyboardEvent) {
   }
 }
 function search() {
-  window.open(seStore.getEnginesLink(seStore.currentEngine) + searchContext.value, '_blank');
+  const sv = searchContext.value.trim()
+  searchContext.value = ''
+  window.open(seStore.getEnginesLink(seStore.currentEngine) + sv, '_blank');
 }
 function updateEngine(_: string | number, option: DropdownOption) {
-  seStore.changeCurrentEngines(option.label as string ?? "bing")
+  if (option.key === "setting") {
+    dialog.create(
+      {
+        title: '编辑搜索引擎',
+        content() {
+          return h(
+            SearchEnginEdit
+          )
+        },
+
+      }
+    )
+  } else {
+
+    seStore.changeCurrentEngines(option.label as string ?? "bing")
+  }
 }
 onMounted(() => {
   seStore.loadEngines()
   enginesOptions.value = seStore.enginesOptions()
   // console.log(SearchEnginsStore.enginesOptions());
-  
+
 });
 </script>
 
@@ -54,7 +73,7 @@ onMounted(() => {
 .searchBox {
   /* padding: 6px 6px 6px 6px; */
   display: flex;
-  
+
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;

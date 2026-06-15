@@ -17,10 +17,11 @@ const base_route = "/api/searchEngin"
 
 func InitApi(route *http.ServeMux) {
 	r := map[string]func(w http.ResponseWriter, r *http.Request){
-		fmt.Sprintf("GET %v", base_route):                          list,
-		fmt.Sprintf("POST %v", base_route):                         list,
-		fmt.Sprintf("DELETE %v/{id}", base_route):                  list,
-		fmt.Sprintf("UPDATE %v/changeDefault/{engin}", base_route): changeDefault,
+		fmt.Sprintf("GET %v", base_route):                       list,
+		fmt.Sprintf("POST %v", base_route):                      add,
+		fmt.Sprintf("DELETE %v/{id}", base_route):               delete,
+		fmt.Sprintf("PUT %v/changeDefault/{engin}", base_route): changeDefault,
+		fmt.Sprintf("GET %v/default", base_route):               defaultEngin,
 	}
 
 	for r, v := range r {
@@ -86,4 +87,7 @@ func changeDefault(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	HttpTool.ResponseJson(w, AjaxRes.Success("ok"))
+}
+func defaultEngin(w http.ResponseWriter, r *http.Request) {
+	HttpTool.ResponseJson(w, AjaxRes.Success(models.GetConfig().DefaultEngin))
 }

@@ -1,10 +1,13 @@
 package middleware
 
 import (
-	"log"
 	"net/http"
 	"time"
+
+	"github.com/lbfatcgf/lbftag/tool/logtool"
 )
+
+var logger = logtool.NewLogger("middleware", true)
 
 // 中间件：请求日志 + 耗时
 func LoggingMiddleware(next http.Handler) http.Handler {
@@ -14,6 +17,7 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 
-		log.Printf("[%s] %s %s 耗时: %v", r.Method, r.URL.Path, r.RemoteAddr, time.Since(start))
+		// log.Printf("[%s] %s %s 耗时: %v", r.Method, r.URL.Path, r.RemoteAddr, time.Since(start))
+		logger.Debug("requset", "method", r.Method, "path", r.URL.Path, "remote_addr", r.RemoteAddr, "cost", time.Since(start))
 	})
 }
