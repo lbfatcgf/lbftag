@@ -14,6 +14,7 @@ foreach ($arg in $args) {
 
 if ($buildWeb) {
     Set-Location web
+    pnpm i
     pnpm run build
     Write-Host "编译web完成"
     Set-Location ..
