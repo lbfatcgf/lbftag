@@ -14,8 +14,8 @@ else ifeq ($(UNAME_S), Darwin)
 else
     OS := windows
 	PROJECT_PATH := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
-	BUILD_CMD := &"$(PROJECT_PATH)/scripts/build.ps1"
-	DEV_CMD := &"$(PROJECT_PATH)/scripts/dev.ps1"
+	BUILD_CMD := pwsh $$(PROJECT_PATH)/scripts/build.ps1
+	DEV_CMD := pwsh $(PROJECT_PATH)/scripts/dev.ps1
 endif
 
 WEB_PRO := $(PROJECT_PATH)/web
