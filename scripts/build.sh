@@ -4,6 +4,7 @@ set -e
 
 
 cd web
+pnpm i
 pnpm run build
 echo "编译web完成"
 cd ..
