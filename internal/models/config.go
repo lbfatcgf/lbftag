@@ -4,14 +4,21 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sync"
 
 	"github.com/pelletier/go-toml/v2"
 )
 
 type Config struct {
-	Port         int    `toml:"port" json:"port"`
-	Host         string `toml:"host" json:"host"`
-	DefaultEngin string `toml:"defaultEngin" json:"defaultEngin"`
+	Port         int        `toml:"port" json:"port"`
+	Host         string     `toml:"host" json:"host"`
+	DefaultEngin string     `toml:"defaultEngin" json:"defaultEngin"`
+	Hot          *HotConfig `toml:"hot" json:"hot"`
+}
+
+// 可在线更改配置
+type HotConfig struct {
+	LogOpen bool `toml:"log" json:"log"`
 }
 
 func (c *Config) Hosts() string {
@@ -76,6 +83,9 @@ func defaultConfig() *Config {
 		Port:         6677,
 		Host:         "0.0.0.0",
 		DefaultEngin: "bing",
+		Hot: &HotConfig{
+			LogOpen: true,
+		},
 	}
 }
 
@@ -86,7 +96,12 @@ func GetConfig() *Config {
 
 	return conf
 }
+
+var wlock = &sync.RWMutex{}
+
 func SaveConfig() error {
+	wlock.Lock()
+	defer wlock.Unlock()
 	confDir, err := os.UserConfigDir()
 	if err != nil {
 		return err

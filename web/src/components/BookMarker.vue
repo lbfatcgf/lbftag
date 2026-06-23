@@ -47,7 +47,8 @@ import {
 import { EllipsisV } from '@vicons/fa'
 import { ref } from 'vue';
 import BookMarkerTree from './BookMarkerTree.vue'
-import { useBookMarkStore } from '../store/book_marker_stroe.js';
+import { useBookMarkStore } from '@/store/book_marker_stroe.js';
+import { useRouter } from 'vue-router';
 const markStore = useBookMarkStore()
 const inputHtml = ref<HTMLInputElement>()
 
@@ -60,6 +61,10 @@ const setOption: DropdownOption[] = [
     {
         label: "清空",
         key: "clear"
+    },
+    {
+        label: "设置",
+        key: "setting"
     }
 ]
 const isImporting = ref(false)
@@ -80,7 +85,7 @@ function handleInputHtml(event: Event) {
 
     })
 }
-
+const r=useRouter()
 function handleSelect(key: string) {
 
 
@@ -91,19 +96,11 @@ function handleSelect(key: string) {
     if (key === 'clear') {
         markStore.clearAll()
     }
+    if (key === 'setting'){
+r.push('/setting')
+    }
 }
-// const cuurentBMDir = ref<Array<string>>(["/"])
-// function handleChangeDir(coordinates: number[], tagName: string,) {
-//     if (coordinates.length < cuurentBMDir.value.length) {
-//         cuurentBMDir.value = cuurentBMDir.value.slice(0, coordinates.length - 1)
-//     }
-//     cuurentBMDir.value.push(tagName)
-// }
-// function changeDir(index:number){
-//     console.log(index);
-//     cuurentBMDir.value=cuurentBMDir.value.slice(0,index+1)
-//     mbTree.value?.changeBMDir(index)
-// }
+
 </script>
 
 <style scoped>

@@ -39,10 +39,10 @@ import {
     NButton, useDialog,
     useNotification
 } from 'naive-ui';
-import { useBookMarkStore } from '../store/book_marker_stroe';
+import { useBookMarkStore } from '@/store/book_marker_stroe';
 
-import { BookMarkerNode } from '../models/book_marker';
-import { MarkApi } from '../api/marks';
+import { BookMarkerNode } from '@/models/book_marker';
+import { MarkApi } from '@/api/marks';
 const mApi = new MarkApi()
 const markStore = useBookMarkStore()
 const f = ref<BookMarkerNode>(

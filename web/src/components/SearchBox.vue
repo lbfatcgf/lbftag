@@ -24,7 +24,7 @@
 import { h, onMounted, ref } from 'vue';
 import { NInput, NIcon, NButton, NDropdown, type DropdownOption, useDialog } from 'naive-ui'
 import { Search } from '@vicons/fa'
-import { useSerchEngineStore } from '../store/search_engins_stroe';
+import { useSerchEngineStore } from '@/store/search_engins_stroe';
 import SearchEnginEdit from './SearchEnginEdit.vue';
 const dialog = useDialog()
 const seStore = useSerchEngineStore()

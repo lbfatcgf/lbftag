@@ -33,6 +33,9 @@ body {
 	left: 0px;
 	backdrop-filter: blur(5px);
 	background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .unloading{
 	display: none;

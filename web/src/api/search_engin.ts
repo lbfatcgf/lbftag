@@ -1,5 +1,5 @@
-import { AjaxRes } from "../models/ajax_res";
-import { SearchEngine } from "../models/search_engin";
+import { AjaxRes } from "@/models/ajax_res";
+import { SearchEngine } from "@/models/search_engin";
 
 export default class SearchEngineApi {
     async list(): Promise<AjaxRes<SearchEngine[]>> {

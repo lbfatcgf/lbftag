@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 
+	configserver "github.com/lbfatcgf/lbftag/internal/server/config_server"
 	enginserver "github.com/lbfatcgf/lbftag/internal/server/engin_server"
 	markserver "github.com/lbfatcgf/lbftag/internal/server/mark_server"
 )
@@ -16,6 +17,9 @@ func InitApi(route *http.ServeMux) {
 	}
 	{
 		enginserver.InitApi(route)
+	}
+	{
+		configserver.InitApi(route)
 	}
 }
 

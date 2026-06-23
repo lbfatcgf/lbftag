@@ -1,7 +1,7 @@
 import type { DropdownOption } from "naive-ui";
 import { defineStore } from "pinia";
-import SearchEngineApi from "../api/search_engin";
-import { SearchEngine } from "../models/search_engin";
+import SearchEngineApi from "@/api/search_engin";
+import { SearchEngine } from "@/models/search_engin";
 
 
 const seApi = new SearchEngineApi()

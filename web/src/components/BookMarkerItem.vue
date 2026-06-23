@@ -23,8 +23,8 @@
 <script setup lang="ts">
 import { NFlex, NIcon, useDialog } from 'naive-ui';
 import { FolderRegular, Link } from '@vicons/fa'
-import type { BookMarkerNode } from '../models/book_marker';
-import { useBookMarkStore } from '../store/book_marker_stroe';
+import type { BookMarkerNode } from '@/models/book_marker';
+import { useBookMarkStore } from '@/store/book_marker_stroe';
 import BookMarkerEdit from './BookMarkerEdit.vue';
 import { h, onMounted, ref } from 'vue';
 const markStore=useBookMarkStore()

@@ -24,7 +24,10 @@ func InitApi(route *http.ServeMux) {
 	r["POST /api/mark/clearAll"] = clearAll
 
 	for r, v := range r {
-		tool.PrintRoute(r)
+		if models.GetConfig().Hot.LogOpen {
+
+			tool.PrintRoute(r)
+		}
 		route.HandleFunc(r, v)
 	}
 }

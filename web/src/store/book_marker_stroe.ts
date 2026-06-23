@@ -1,6 +1,6 @@
-import { type BookMarkerNode } from "../models/book_marker";
-import type { BookMarkerPath } from "../models/book_marker_path";
-import { MarkApi } from "../api/marks";
+import { type BookMarkerNode } from "@/models/book_marker";
+import type { BookMarkerPath } from "@/models/book_marker_path";
+import { MarkApi } from "@/api/marks";
 import { createDiscreteApi, type NotificationApi } from "naive-ui";
 import { defineStore } from "pinia";
 const markApi = new MarkApi();

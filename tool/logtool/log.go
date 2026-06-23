@@ -42,6 +42,7 @@ func NewLogger(grouping string, logConsloe bool) *Logger {
 	}
 	if logConsloe {
 		logger.consloe = slog.New(tint.NewHandler(os.Stderr, &tint.Options{
+			Level:      slog.LevelDebug,
 			TimeFormat: "2006-01-02 15:04:05",
 		}))
 

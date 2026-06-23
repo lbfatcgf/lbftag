@@ -26,8 +26,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { NFlex, NInput, NButton, NDivider, createDiscreteApi } from 'naive-ui';
-import { useSerchEngineStore } from '../store/search_engins_stroe';
-import { SearchEngine } from '../models/search_engin';
+import { useSerchEngineStore } from '@/store/search_engins_stroe';
+import { SearchEngine } from '@/models/search_engin';
 
 const seStore = useSerchEngineStore()
 

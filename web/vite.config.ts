@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 
 import allPlugins from "./plugin/all"
+import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -15,9 +16,9 @@ export default defineConfig({
     }
   },
   plugins: allPlugins(),
-  // build: {
-  //   rolldownOptions:{
-  //     external: ['naive-ui']
-  //   }
-  // }
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src')
+    }
+  }
 })

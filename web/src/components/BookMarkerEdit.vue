@@ -25,15 +25,15 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { useBookMarkStore } from '../store/book_marker_stroe';
+import { useBookMarkStore } from '@/store/book_marker_stroe';
 import {
     NInput, NFlex,
     NButton, useNotification,
     useDialog,
     NSpin
 } from 'naive-ui';
-import { BookMarkerNode } from '../models/book_marker';
-import { MarkApi } from '../api/marks';
+import { BookMarkerNode } from '@/models/book_marker';
+import { MarkApi } from '@/api/marks';
 const mApi = new MarkApi()
 const markStore = useBookMarkStore()
 const markerFrom = ref<BookMarkerNode>({

@@ -1,5 +1,5 @@
-import { AjaxRes } from "../models/ajax_res";
-import { BookMarkerNode } from "../models/book_marker";
+import { AjaxRes } from "@/models/ajax_res";
+import { BookMarkerNode } from "@/models/book_marker";
 
 export class MarkApi {
 

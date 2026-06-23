@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { NIcon, NPopover, useDialog } from 'naive-ui';
 import { Plus } from '@vicons/fa'
-import { useBookMarkStore } from '../store/book_marker_stroe';
+import { useBookMarkStore } from '@/store/book_marker_stroe';
 import { h } from 'vue';
 import AddMarkerEdit from './AddMarkerEdit.vue';
 const markStore=useBookMarkStore()

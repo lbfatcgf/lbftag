@@ -5,14 +5,17 @@ ifeq ($(UNAME_S), Linux)
     OS := linux
 	PROJECT_PATH:= $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 	BUILD_CMD := bash $(PROJECT_PATH)/scripts/build.sh
+	DEV_CMD := bash $(PROJECT_PATH)/scripts/dev.sh
 else ifeq ($(UNAME_S), Darwin)
     OS := macos
 	PROJECT_PATH:= $(shell pwd)
 	BUILD_CMD := bash $(PROJECT_PATH)/scripts/build.sh
+	DEV_CMD := bash $(PROJECT_PATH)/scripts/dev.sh
 else
     OS := windows
 	PROJECT_PATH := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 	BUILD_CMD := &"$(PROJECT_PATH)/scripts/build.ps1"
+	DEV_CMD := &"$(PROJECT_PATH)/scripts/dev.ps1"
 endif
 
 WEB_PRO := $(PROJECT_PATH)/web
@@ -24,10 +27,14 @@ info:
 # 构建
 
 build:
-	$(BUILD_CMD) -server -web
+	$(BUILD_CMD) 
 
-build-server:
-	$(BUILD_CMD) -server
+dev:
+	$(DEV_CMD) -server -web
 
-build-web:
-	$(BUILD_CMD) -web
+dev-server:
+	$(DEV_CMD) -server
+
+dev-web:
+	$(DEV_CMD) -web
+

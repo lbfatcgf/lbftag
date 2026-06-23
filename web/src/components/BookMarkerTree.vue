@@ -25,7 +25,7 @@ import { NFlex, NSpin } from 'naive-ui';
 import BookMarkerItem from './BookMarkerItem.vue';
 import AddMarker from './AddMarker.vue';
 import { onMounted } from 'vue';
-import { useBookMarkStore } from '../store/book_marker_stroe.js';
+import { useBookMarkStore } from '@/store/book_marker_stroe.js';
 const markStore = useBookMarkStore()
 const emit = defineEmits<{
 	(e: "clickDir", coordinates: Array<number>, tagName: string): void

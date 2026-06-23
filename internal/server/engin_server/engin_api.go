@@ -25,7 +25,10 @@ func InitApi(route *http.ServeMux) {
 	}
 
 	for r, v := range r {
-		tool.PrintRoute(r)
+		if models.GetConfig().Hot.LogOpen {
+
+			tool.PrintRoute(r)
+		}
 		route.HandleFunc(r, v)
 	}
 }

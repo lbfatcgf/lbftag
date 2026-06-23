@@ -2,37 +2,14 @@
 
 set -e
 
-args=("$@")
 
-buildGo=false
-buildWeb=false
+cd web
+pnpm run build
+echo "编译web完成"
+cd ..
 
-for arg in "${args[@]}"; do
+export GOEXPERIMENT=jsonv2
+go build -ldflags="-s -w" -tags=systray_nogtk -o dist/lbftag cmd/main.go
 
-    if [ "$arg" == "-server" ];then
-        buildGo=true
-    fi
-    if [ "$arg" == "-web" ];then
-        buildWeb=true
-    fi
-done
-# if [ ${#args[@]} -eq 0];then
-#     buildGo=
-# fi
+echo "编译go完成"
 
-
-if $buildWeb; then
-
-    cd web
-    pnpm run build
-    echo "编译web完成"
-    cd ..
-fi
-
-if $buildGo; then
-    pwd
-    export GOEXPERIMENT=jsonv2
-    go build  -tags=systray_nogtk -o dist/lbftag cmd/main.go
-
-    echo "编译go完成"
-fi
