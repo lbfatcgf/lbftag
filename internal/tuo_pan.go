@@ -10,7 +10,7 @@ import (
 )
 
 func StartTuoPan() {
-	fmt.Println("v0.0.2")
+	fmt.Println("v0.0.3")
 	//为linux系统时判断是否正在运行桌面环境
 	if isGUI() {
 		err := beeep.Alert("lbf tag", "服务已启动完成，"+models.GetConfig().Hosts(), "assets/information.png")
