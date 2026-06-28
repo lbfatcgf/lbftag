@@ -8,7 +8,7 @@ import (
 	markserver "github.com/lbfatcgf/lbftag/internal/server/mark_server"
 )
 
-func InitApi(route *http.ServeMux) {
+func InitApi(route *http.ServeMux, reStartCh chan bool) {
 
 	route.HandleFunc("/index", index)
 	route.HandleFunc("/favicon.svg", favicon)
@@ -19,7 +19,7 @@ func InitApi(route *http.ServeMux) {
 		enginserver.InitApi(route)
 	}
 	{
-		configserver.InitApi(route)
+		configserver.InitApi(route, reStartCh)
 	}
 }
 

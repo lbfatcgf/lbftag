@@ -12,9 +12,9 @@ import (
 var mux *http.ServeMux
 var server *http.Server
 
-func StratHttp() {
+func StratHttp(reStartCh chan bool) {
 	mux = http.NewServeMux()
-	InitApi(mux)
+	InitApi(mux, reStartCh)
 	server = &http.Server{
 		Addr:    models.GetConfig().ServerHost(),
 		Handler: middleware.LoggingMiddleware(mux),
@@ -22,7 +22,6 @@ func StratHttp() {
 	err := server.ListenAndServe()
 	if err != nil {
 		if !errors.Is(err, http.ErrServerClosed) {
-
 			panic(err)
 		}
 	}

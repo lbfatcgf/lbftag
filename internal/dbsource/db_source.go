@@ -25,7 +25,7 @@ func InitDB() {
 		panic(err)
 	}
 	db = source
-	db.AutoMigrate(&models.MarkNode{}, &models.SearchEngin{})
+	db.AutoMigrate(&models.MarkNode{}, &models.SearchEngin{}, &models.Config{})
 }
 
 func Db() *gorm.DB {

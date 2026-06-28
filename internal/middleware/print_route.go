@@ -18,7 +18,7 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 
-		if models.GetConfig().Hot.LogOpen {
+		if models.GetConfig().LogOpen != nil && *models.GetConfig().LogOpen {
 			// fmt.Printf("log open:%v", models.GetConfig().Hot.LogOpen)
 			logger.Debug("requset", "method", r.Method, "path", r.URL.Path, "remote_addr", r.RemoteAddr, "cost", time.Since(start))
 		}

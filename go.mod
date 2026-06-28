@@ -7,7 +7,6 @@ require (
 	github.com/gen2brain/beeep v0.11.2
 	github.com/lmittmann/tint v1.1.3
 	github.com/matoous/go-nanoid/v2 v2.1.0
-	github.com/pelletier/go-toml/v2 v2.3.1
 	gorm.io/driver/sqlite v1.6.0
 	gorm.io/gorm v1.31.1
 )

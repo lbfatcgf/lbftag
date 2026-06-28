@@ -23,10 +23,14 @@
                 <n-button type="primary" @click="save" :loading="isSaving">
                     保存
                 </n-button>
+                <n-button type="warning" @click="restart" :loading="isRestarting">
+                    重启服务
+                </n-button>
             </n-flex>
             <div :class="isLoadind ? 'loading' : 'unloading'" style="border-radius: 12px;">
                 <n-spin size="large" style="margin: auto;" />
             </div>
+
         </glass-box>
     </n-flex>
 </template>
@@ -37,7 +41,8 @@ import {
     NFlex,
     NIcon,
     NSwitch,
-    NSpin
+    NSpin,
+    useMessage
 } from 'naive-ui';
 import { ArrowLeft } from '@vicons/fa';
 import { useRouter } from 'vue-router';
@@ -54,13 +59,13 @@ function back() {
     router.back()
 }
 const s = ref<HotSetting>({
-    log: true
+    log: true, defaultEngin: ''
 })
 const isLoadind = ref(false)
 function loadSetting() {
     isLoadind.value = true
     api.setting().then(res => {
-        s.value = res.data ?? { log: true }
+        s.value = res.data ?? { log: true, defaultEngin: '' }
     }).finally(() => {
         isLoadind.value = false
     })
@@ -72,6 +77,22 @@ function save() {
         loadSetting()
     }).finally(() => {
         isSaving.value = false
+    })
+}
+const isRestarting = ref(false)
+const msg = useMessage()
+function restart() {
+    isRestarting.value = true
+    api.restart().then((res) => {
+        if (res.code === "200" && res.data === "reload") {
+            msg.success("服务重启中，5s后刷新")
+            setTimeout(() => {
+                window.location.reload()
+            }, 5000);
+        }
+
+    }).finally(() => {
+        isRestarting.value = false
     })
 }
 onMounted(() => {

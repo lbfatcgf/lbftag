@@ -2,114 +2,56 @@ package models
 
 import (
 	"fmt"
-	"io"
-	"os"
-	"sync"
-
-	"github.com/pelletier/go-toml/v2"
+	"gorm.io/gorm"
 )
 
 type Config struct {
-	Port         int        `toml:"port" json:"port"`
-	Host         string     `toml:"host" json:"host"`
-	DefaultEngin string     `toml:"defaultEngin" json:"defaultEngin"`
-	Hot          *HotConfig `toml:"hot" json:"hot"`
+	gorm.Model
+	Port         *int    `json:"port" gorm:"not null; default:6677"`
+	Host         *string `json:"host" gorm:"not null; default:'0.0.0.0'"`
+	DefaultEngin *string `json:"defaultEngin" gorm:"not null; default:'bing'"`
+	LogOpen      *bool   `json:"log" gorm:"not null; default:true"`
 }
 
-// 可在线更改配置
-type HotConfig struct {
-	LogOpen bool `toml:"log" json:"log"`
+func (Config) TableName() string {
+	return "app_config"
 }
 
 func (c *Config) Hosts() string {
-	return fmt.Sprintf("http://%v:%v/index", c.Host, c.Port)
+	return fmt.Sprintf("http://%v:%v/index", *c.Host, *c.Port)
 }
 
 func (c *Config) ServerHost() string {
-	return fmt.Sprintf("%v:%v", c.Host, c.Port)
+	return fmt.Sprintf("%v:%v", *c.Host, *c.Port)
+}
+func (c *Config) CanChangConfig() map[string]any {
+	return map[string]any{
+		"defaultEngin": *c.DefaultEngin,
+		"log":          *c.LogOpen,
+	}
+}
+func (c *Config) UpdateByConfig(conf Config) {
+	if conf.Port != nil {
+		c.Port = conf.Port
+	}
+	if conf.Host != nil {
+		c.Host = conf.Host
+	}
+	if conf.LogOpen != nil {
+		c.LogOpen = conf.LogOpen
+	}
+	if conf.DefaultEngin != nil {
+		c.DefaultEngin = conf.DefaultEngin
+	}
+
 }
 
 var conf *Config
 
-func ReadConfig() {
-	confDir, err := os.UserConfigDir()
-	if err != nil {
-		panic(err)
-	}
-	cf, err := os.Open(confDir + "/lbftag/conf.toml")
-	if err != nil {
-		if os.IsNotExist(err) {
-			conf = defaultConfig()
-
-			// 再创建文件
-			cf, err = os.Create(confDir + "/lbftag/conf.toml")
-			if err != nil {
-				// 创建文件失败
-				panic(err)
-			}
-			data := make([]byte, 0)
-			data, err = toml.Marshal(conf)
-			// cf.Write()
-			if err != nil {
-				panic(err)
-			}
-
-			_, err = cf.Write(data)
-			if err != nil {
-				panic(err)
-			}
-		} else {
-			panic(err)
-		}
-	}
-
-	defer cf.Close()
-	fmt.Println("配置文件已存在")
-	data, err := io.ReadAll(cf)
-	if err != nil {
-		panic(err)
-	}
-
-	config := defaultConfig()
-	err = toml.Unmarshal(data, config)
-	if err != nil {
-		panic(err)
-	}
-	conf = config
-	// fmt.Println(conf)
-}
-func defaultConfig() *Config {
-	return &Config{
-		Port:         6677,
-		Host:         "0.0.0.0",
-		DefaultEngin: "bing",
-		Hot: &HotConfig{
-			LogOpen: true,
-		},
-	}
+func InitConfig(con *Config) {
+	conf = con
 }
 
 func GetConfig() *Config {
-	if conf == nil {
-		conf = defaultConfig()
-	}
-
 	return conf
-}
-
-var wlock = &sync.RWMutex{}
-
-func SaveConfig() error {
-	wlock.Lock()
-	defer wlock.Unlock()
-	confDir, err := os.UserConfigDir()
-	if err != nil {
-		return err
-	}
-	data := make([]byte, 0)
-	data, err = toml.Marshal(conf)
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(confDir+"/lbftag/conf.toml", data, os.ModePerm)
 }

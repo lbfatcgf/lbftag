@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/lbfatcgf/lbftag/internal/dbsource/configcurd"
 	"github.com/lbfatcgf/lbftag/internal/dbsource/engincurd"
 	"github.com/lbfatcgf/lbftag/internal/models"
 	AjaxRes "github.com/lbfatcgf/lbftag/internal/models/ajaxRes"
@@ -25,7 +26,7 @@ func InitApi(route *http.ServeMux) {
 	}
 
 	for r, v := range r {
-		if models.GetConfig().Hot.LogOpen {
+		if models.GetConfig().LogOpen != nil && *models.GetConfig().LogOpen {
 
 			tool.PrintRoute(r)
 		}
@@ -83,8 +84,8 @@ func changeDefault(w http.ResponseWriter, r *http.Request) {
 		HttpTool.ResponseJson(w, AjaxRes.Success("ok"))
 		return
 	}
-	models.GetConfig().DefaultEngin = engin
-	err := models.SaveConfig()
+	*models.GetConfig().DefaultEngin = engin
+	err := configcurd.SaveConfig()
 	if err != nil {
 		HttpTool.ErrRequset(w, "400", err)
 		return

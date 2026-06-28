@@ -8,7 +8,7 @@ import (
 	"syscall"
 
 	"github.com/lbfatcgf/lbftag/internal/dbsource"
-	"github.com/lbfatcgf/lbftag/internal/models"
+	"github.com/lbfatcgf/lbftag/internal/dbsource/configcurd"
 	"github.com/lbfatcgf/lbftag/internal/server"
 	logtool "github.com/lbfatcgf/lbftag/tool/logtool"
 )
@@ -17,19 +17,44 @@ func Start() {
 	createConfigDir()
 	createDbFile()
 	dbsource.InitDB()
-	models.ReadConfig()
-	go server.StratHttp()
+	err := configcurd.ReadConfig()
+	if err != nil {
+		panic(err)
+	}
+	reStartCh := make(chan bool)
+	go server.StratHttp(reStartCh)
 	StartTuoPan()
 
 	// 监听系统信号，优雅关闭
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
-	<-sigCh
+	breakLoop := false
+	for {
+		if breakLoop {
+			break
+		}
+		select {
+		case <-sigCh:
+			fmt.Println("正在关闭服务...")
+			ctx := context.Background()
+			server.Stop(ctx)
+			logtool.CloseAllLog()
+			breakLoop = true
+		case needReload := <-reStartCh:
+			if needReload {
+				fmt.Println("正在重启服务...")
+				err := configcurd.ReadConfig()
+				if err != nil {
+					panic(err)
+				}
+				ctx := context.Background()
+				server.Stop(ctx)
+				go server.StratHttp(reStartCh)
+			}
 
-	fmt.Println("正在关闭服务...")
-	ctx := context.Background()
-	server.Stop(ctx)
-	logtool.CloseAllLog()
+		}
+	}
+
 }
 
 func createConfigDir() {

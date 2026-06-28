@@ -1,3 +1,4 @@
 export type HotSetting = {
-    log:boolean,
+    log: boolean,
+    defaultEngin: string,
 }

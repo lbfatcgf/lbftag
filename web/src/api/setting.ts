@@ -15,7 +15,7 @@ export default class SettingApi {
         return await res.json() as AjaxRes<HotSetting>
     }
 
-    async update(setting: HotSetting): Promise<AjaxRes<string>>{
+    async update(setting: HotSetting): Promise<AjaxRes<string>> {
         const res = await fetch(
             `/api/setting`,
             {
@@ -23,7 +23,20 @@ export default class SettingApi {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body:JSON.stringify(setting)
+                body: JSON.stringify(setting)
+            }
+        )
+        return await res.json() as AjaxRes<string>
+    }
+    // PUT /api/setting/restart
+    async restart(): Promise<AjaxRes<string>> {
+        const res = await fetch(
+            `/api/setting/restart`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                }
             }
         )
         return await res.json() as AjaxRes<string>
