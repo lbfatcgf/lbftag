@@ -23,3 +23,12 @@ func Icon() []byte {
 	}
 	return data
 }
+
+func IconPNG() []byte {
+	data, err := lbftap.Assets.ReadFile("web/dist/favicon.png")
+
+	if err != nil {
+		panic(err)
+	}
+	return data
+}

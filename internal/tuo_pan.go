@@ -7,13 +7,15 @@ import (
 
 	"github.com/gen2brain/beeep"
 	"github.com/lbfatcgf/lbftag/internal/models"
+	"github.com/lbfatcgf/lbftag/internal/server"
 )
 
 func StartTuoPan() {
 	fmt.Println("v0.0.3")
 	//为linux系统时判断是否正在运行桌面环境
 	if isGUI() {
-		err := beeep.Alert("lbf tag", "服务已启动完成，"+models.GetConfig().Hosts(), "assets/information.png")
+		beeep.AppName = "LbfTag"
+		err := beeep.Notify("lbf tag", "服务已启动完成，"+models.GetConfig().Hosts(), server.IconPNG())
 		if err != nil {
 			panic(err)
 		}
